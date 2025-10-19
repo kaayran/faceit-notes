@@ -1,8 +1,23 @@
 {
   "manifest_version": 3,
-  "name": "Faceit Notes",
+  "name": "__MSG_extensionName__",
   "version": "0.0.1",
-  "description": "A extension for making player notes on Faceit.",
+  "description": "__MSG_extensionDescription__",
   "default_locale": "en",
-  "author": "kayran"
+  "author": "kayran",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  }
 }

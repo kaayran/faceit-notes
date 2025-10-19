@@ -1,0 +1,27 @@
+{
+  "extensionName": {
+    "message": "Faceit Notes",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "A extension for making player notes on Faceit.",
+    "description": "Description of the extension"
+  },
+  "popupTitle": {
+    "message": "Faceit Notes",
+    "description": "Title in the popup"
+  },
+  "popupInfo": {
+    "message": "Extension for making player notes on Faceit",
+    "description": "Information text in popup"
+  },
+  "viewNotesButton": {
+    "message": "View Notes",
+    "description": "Button to view notes"
+  },
+  "settingsButton": {
+    "message": "Settings",
+    "description": "Button to open settings"
+  }
+}
+

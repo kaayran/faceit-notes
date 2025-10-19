@@ -1,0 +1,1 @@
+This project is a browser extension that adds notes for Faceit players in your lobby (similar to Player Notes on PokerStars). It includes features such as highlighting players with colors and adding notes for individual players, which are stored locally in your browser.

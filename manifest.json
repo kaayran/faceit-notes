@@ -1,0 +1,8 @@
+{
+  "manifest_version": 3,
+  "name": "Faceit Notes",
+  "version": "0.0.1",
+  "description": "A extension for making player notes on Faceit.",
+  "default_locale": "en",
+  "author": "kayran"
+}

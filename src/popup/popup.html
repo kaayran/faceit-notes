@@ -36,17 +36,17 @@
         <div id="notesScreen" class="screen" style="display: none;">
             <header class="notes-header">
                 <button id="backBtn" class="icon-btn">←</button>
-                <h1>Notes (<span id="notesCount">0</span>)</h1>
+                <h1><span data-i18n="notesTitle">Notes</span> (<span id="notesCount">0</span>)</h1>
             </header>
 
-            <input type="text" id="searchInput" placeholder="Search..." />
+            <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Search..." />
 
             <div id="notesList" class="notes-list">
                 <!-- Notes will be inserted here -->
             </div>
 
             <div id="emptyState" class="empty-state" style="display: none;">
-                <p>No notes yet</p>
+                <p data-i18n="noNotesYet">No notes yet</p>
             </div>
         </div>
 
@@ -54,55 +54,55 @@
         <div id="settingsScreen" class="screen" style="display: none;">
             <header class="notes-header">
                 <button id="settingsBackBtn" class="icon-btn">←</button>
-                <h1>Settings</h1>
+                <h1 data-i18n="settingsTitle">Settings</h1>
             </header>
 
             <div class="settings-container">
                 <!-- Color Settings -->
                 <div class="settings-group">
                     <button class="settings-group-header">
-                        <span>Color Settings</span>
+                        <span data-i18n="colorSettings">Color Settings</span>
                         <span class="collapse-icon">▼</span>
                     </button>
                     <div class="settings-group-content">
                         <div class="settings-section">
                             <div class="color-setting">
-                                <label>Icon without note</label>
+                                <label data-i18n="iconWithoutNote">Icon without note</label>
                                 <input type="color" id="colorNoNote" value="#888888">
                             </div>
                             <div class="color-setting">
-                                <label>Icon with note</label>
+                                <label data-i18n="iconWithNote">Icon with note</label>
                                 <input type="color" id="colorWithNote" value="#4caf50">
                             </div>
                         </div>
 
                         <div class="presets-section">
-                            <h3>Presets</h3>
+                            <h3 data-i18n="presets">Presets</h3>
                             <button class="preset-btn" data-no-note="#888888" data-with-note="#4caf50">
                                 <span class="preset-dot" style="background: #888888;"></span>
                                 <span class="preset-dot" style="background: #4caf50;"></span>
-                                Default
+                                <span data-i18n="presetDefault">Default</span>
                             </button>
                             <button class="preset-btn" data-no-note="#6c757d" data-with-note="#2196F3">
                                 <span class="preset-dot" style="background: #6c757d;"></span>
                                 <span class="preset-dot" style="background: #2196F3;"></span>
-                                Protanopia
+                                <span data-i18n="presetProtanopia">Protanopia</span>
                             </button>
                             <button class="preset-btn" data-no-note="#6c757d" data-with-note="#FF9800">
                                 <span class="preset-dot" style="background: #6c757d;"></span>
                                 <span class="preset-dot" style="background: #FF9800;"></span>
-                                Deuteranopia
+                                <span data-i18n="presetDeuteranopia">Deuteranopia</span>
                             </button>
                             <button class="preset-btn" data-no-note="#6c757d" data-with-note="#E91E63">
                                 <span class="preset-dot" style="background: #6c757d;"></span>
                                 <span class="preset-dot" style="background: #E91E63;"></span>
-                                Tritanopia
+                                <span data-i18n="presetTritanopia">Tritanopia</span>
                             </button>
                         </div>
 
                         <div class="settings-actions">
-                            <button id="resetColors" class="btn btn-secondary">Reset</button>
-                            <button id="saveColors" class="btn btn-primary">Save</button>
+                            <button id="resetColors" class="btn btn-secondary" data-i18n="resetButton">Reset</button>
+                            <button id="saveColors" class="btn btn-primary" data-i18n="saveButton">Save</button>
                         </div>
                     </div>
                 </div>
@@ -110,25 +110,25 @@
                 <!-- Import/Export Settings -->
                 <div class="settings-group">
                     <button class="settings-group-header">
-                        <span>Import / Export</span>
+                        <span data-i18n="importExport">Import / Export</span>
                         <span class="collapse-icon">▼</span>
                     </button>
                     <div class="settings-group-content">
                         <div class="settings-section">
-                            <p class="settings-description">Backup and restore your notes</p>
+                            <p class="settings-description" data-i18n="backupDescription">Backup and restore your notes</p>
                             
                             <div class="import-export-actions">
-                                <button id="exportNotes" class="btn btn-primary full-width">
+                                <button id="exportNotes" class="btn btn-primary full-width" data-i18n="exportNotesButton">
                                     📤 Export Notes
                                 </button>
-                                <button id="importNotes" class="btn btn-secondary full-width">
+                                <button id="importNotes" class="btn btn-secondary full-width" data-i18n="importNotesButton">
                                     📥 Import Notes
                                 </button>
                                 <input type="file" id="importFileInput" accept=".json" style="display: none;">
                             </div>
 
                             <div class="notes-stats">
-                                <span class="stats-label">Total notes:</span>
+                                <span class="stats-label" data-i18n="totalNotes">Total notes:</span>
                                 <span class="stats-value" id="totalNotesCount">0</span>
                             </div>
                         </div>
@@ -145,10 +145,10 @@
                 <span class="modal-nickname" id="editNickname"></span>
                 <button class="modal-close" id="closeModal">✕</button>
             </div>
-            <textarea id="editTextarea" placeholder="Add note..."></textarea>
+            <textarea id="editTextarea" data-i18n-placeholder="addNotePlaceholder" placeholder="Add note..."></textarea>
             <div class="modal-footer">
-                <button id="deleteNoteBtn" class="btn-modal btn-delete">Delete</button>
-                <button id="saveNoteBtn" class="btn-modal btn-save">Save</button>
+                <button id="deleteNoteBtn" class="btn-modal btn-delete" data-i18n="deleteButton">Delete</button>
+                <button id="saveNoteBtn" class="btn-modal btn-save" data-i18n="saveButton">Save</button>
             </div>
         </div>
     </div>

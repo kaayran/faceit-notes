@@ -4,16 +4,12 @@
     "description": "Name of the extension"
   },
   "extensionDescription": {
-    "message": "A extension for making player notes on Faceit.",
+    "message": "An extension for making player notes on Faceit.",
     "description": "Description of the extension"
   },
   "popupTitle": {
     "message": "Faceit Notes",
     "description": "Title in the popup"
-  },
-  "popupInfo": {
-    "message": "Extension for making player notes on Faceit",
-    "description": "Information text in popup"
   },
   "viewNotesButton": {
     "message": "View Notes",
@@ -34,6 +30,122 @@
   "statusDisabled": {
     "message": "Disabled",
     "description": "Status text when extension is disabled"
+  },
+  "notesTitle": {
+    "message": "Notes",
+    "description": "Title for notes screen"
+  },
+  "searchPlaceholder": {
+    "message": "Search...",
+    "description": "Placeholder for search input"
+  },
+  "noNotesYet": {
+    "message": "No notes yet",
+    "description": "Empty state message"
+  },
+  "settingsTitle": {
+    "message": "Settings",
+    "description": "Title for settings screen"
+  },
+  "colorSettings": {
+    "message": "Color Settings",
+    "description": "Color settings section header"
+  },
+  "iconWithoutNote": {
+    "message": "Icon without note",
+    "description": "Label for icon color without note"
+  },
+  "iconWithNote": {
+    "message": "Icon with note",
+    "description": "Label for icon color with note"
+  },
+  "presets": {
+    "message": "Presets",
+    "description": "Label for color presets section"
+  },
+  "presetDefault": {
+    "message": "Default",
+    "description": "Default color preset"
+  },
+  "presetProtanopia": {
+    "message": "Protanopia",
+    "description": "Protanopia color preset"
+  },
+  "presetDeuteranopia": {
+    "message": "Deuteranopia",
+    "description": "Deuteranopia color preset"
+  },
+  "presetTritanopia": {
+    "message": "Tritanopia",
+    "description": "Tritanopia color preset"
+  },
+  "resetButton": {
+    "message": "Reset",
+    "description": "Reset button"
+  },
+  "saveButton": {
+    "message": "Save",
+    "description": "Save button"
+  },
+  "importExport": {
+    "message": "Import / Export",
+    "description": "Import/Export section header"
+  },
+  "backupDescription": {
+    "message": "Backup and restore your notes",
+    "description": "Description for import/export section"
+  },
+  "exportNotesButton": {
+    "message": "📤 Export Notes",
+    "description": "Export notes button"
+  },
+  "importNotesButton": {
+    "message": "📥 Import Notes",
+    "description": "Import notes button"
+  },
+  "totalNotes": {
+    "message": "Total notes:",
+    "description": "Label for total notes count"
+  },
+  "addNotePlaceholder": {
+    "message": "Add note...",
+    "description": "Placeholder for note textarea"
+  },
+  "deleteButton": {
+    "message": "Delete",
+    "description": "Delete button"
+  },
+  "deleteConfirm": {
+    "message": "Sure?",
+    "description": "Delete confirmation text"
+  },
+  "savedFeedback": {
+    "message": "Saved!",
+    "description": "Feedback when settings are saved"
+  },
+  "exportedFeedback": {
+    "message": "✓ Exported!",
+    "description": "Feedback when notes are exported"
+  },
+  "importedFeedback": {
+    "message": "✓ +$1",
+    "description": "Feedback when notes are imported (with count)"
+  },
+  "importedSkipped": {
+    "message": "(-$1 old)",
+    "description": "Text for skipped old notes during import"
+  },
+  "invalidFileFormat": {
+    "message": "Invalid file format",
+    "description": "Error message for invalid import file"
+  },
+  "importError": {
+    "message": "Error importing file:",
+    "description": "Error message prefix for import errors"
+  },
+  "clickToAddNote": {
+    "message": "Click to add note",
+    "description": "Tooltip text when hovering over icon without note"
   }
 }
 

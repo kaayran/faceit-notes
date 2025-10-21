@@ -130,7 +130,7 @@ function createTooltip(nickname, note) {
         tooltip.textContent = preview;
     } else {
         // Show hint to add note
-        tooltip.textContent = 'Click to add note';
+        tooltip.textContent = chrome.i18n.getMessage('clickToAddNote') || 'Click to add note';
     }
     
     return tooltip;

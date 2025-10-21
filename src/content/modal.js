@@ -15,6 +15,10 @@ function openNoteModal(nickname) {
     
     const currentNote = getPlayerNote(nickname);
     
+    const placeholder = chrome.i18n.getMessage('addNotePlaceholder') || 'Add note...';
+    const deleteText = chrome.i18n.getMessage('deleteButton') || 'Delete';
+    const saveText = chrome.i18n.getMessage('saveButton') || 'Save';
+    
     modal.innerHTML = `
         <div class="faceit-notes-modal-content">
             <div class="faceit-notes-modal-header">
@@ -23,11 +27,11 @@ function openNoteModal(nickname) {
             </div>
             <textarea 
                 id="faceit-notes-textarea" 
-                placeholder="Add note..."
+                placeholder="${placeholder}"
             >${currentNote}</textarea>
             <div class="faceit-notes-modal-footer">
-                <button id="deleteNoteBtn" class="faceit-notes-btn-delete">Delete</button>
-                <button id="saveNoteBtn" class="faceit-notes-btn-save">Save</button>
+                <button id="deleteNoteBtn" class="faceit-notes-btn-delete">${deleteText}</button>
+                <button id="saveNoteBtn" class="faceit-notes-btn-save">${saveText}</button>
             </div>
         </div>
     `;
@@ -78,7 +82,7 @@ function openNoteModal(nickname) {
         if (!deleteConfirmed) {
             // First click - ask for confirmation
             deleteConfirmed = true;
-            deleteBtn.textContent = 'Sure?';
+            deleteBtn.textContent = chrome.i18n.getMessage('deleteConfirm') || 'Sure?';
             deleteBtn.style.color = '#dc3545';
             deleteBtn.style.borderColor = '#dc3545';
             

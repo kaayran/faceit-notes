@@ -120,7 +120,7 @@ async function deleteNoteDirectly(nickname, btn) {
         delete allNotes[nickname];
         await saveNotes(allNotes);
         
-        const searchTerm = document.getElementById('searchInput').value;
+        const searchTerm = document.getElementById('searchInput')?.value || '';
         filterNotes(searchTerm);
     }
 }
@@ -154,7 +154,7 @@ function closeEditModal() {
     
     // Reset delete button state
     const deleteBtn = document.getElementById('deleteNoteBtn');
-    deleteBtn.textContent = 'Delete';
+    deleteBtn.textContent = chrome.i18n.getMessage('deleteButton') || 'Delete';
     deleteBtn.style.color = '';
     deleteBtn.style.borderColor = '';
     deleteConfirmed = false;
@@ -200,13 +200,13 @@ async function deleteNoteFromModal() {
     
     if (!deleteConfirmed) {
         deleteConfirmed = true;
-        deleteBtn.textContent = 'Sure?';
+        deleteBtn.textContent = chrome.i18n.getMessage('deleteConfirm') || 'Sure?';
         deleteBtn.style.color = '#dc3545';
         deleteBtn.style.borderColor = '#dc3545';
         
         deleteTimeout = setTimeout(() => {
             deleteConfirmed = false;
-            deleteBtn.textContent = 'Delete';
+            deleteBtn.textContent = chrome.i18n.getMessage('deleteButton') || 'Delete';
             deleteBtn.style.color = '';
             deleteBtn.style.borderColor = '';
         }, 3000);
@@ -216,7 +216,7 @@ async function deleteNoteFromModal() {
         delete allNotes[currentEditingNickname];
         await saveNotes(allNotes);
         
-        const searchTerm = document.getElementById('searchInput').value;
+        const searchTerm = document.getElementById('searchInput')?.value || '';
         filterNotes(searchTerm);
         
         deleteConfirmed = false;

@@ -72,11 +72,21 @@ function updateToggleStatus(enabled) {
  * Apply localization
  */
 function applyLocalization() {
+    // Apply text content
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
         const message = chrome.i18n.getMessage(key);
         if (message) {
             element.textContent = message;
+        }
+    });
+    
+    // Apply placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        const message = chrome.i18n.getMessage(key);
+        if (message) {
+            element.placeholder = message;
         }
     });
 }

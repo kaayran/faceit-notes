@@ -70,7 +70,7 @@ async function saveColorSettings() {
     // Visual feedback
     const saveBtn = document.getElementById('saveColors');
     const originalText = saveBtn.textContent;
-    saveBtn.textContent = 'Saved!';
+    saveBtn.textContent = chrome.i18n.getMessage('savedFeedback') || 'Saved!';
     setTimeout(() => {
         saveBtn.textContent = originalText;
     }, 1000);
@@ -141,7 +141,7 @@ async function exportNotesToJSON() {
     // Visual feedback
     const exportBtn = document.getElementById('exportNotes');
     const originalText = exportBtn.textContent;
-    exportBtn.textContent = '✓ Exported!';
+    exportBtn.textContent = chrome.i18n.getMessage('exportedFeedback') || '✓ Exported!';
     setTimeout(() => {
         exportBtn.textContent = originalText;
     }, 2000);
@@ -163,7 +163,7 @@ async function importNotesFromJSON() {
             
             // Validate structure
             if (!importData.notes || typeof importData.notes !== 'object') {
-                alert('Invalid file format');
+                alert(chrome.i18n.getMessage('invalidFileFormat') || 'Invalid file format');
                 return;
             }
             
@@ -211,7 +211,8 @@ async function importNotesFromJSON() {
             // Visual feedback with stats
             const importBtn = document.getElementById('importNotes');
             const originalText = importBtn.textContent;
-            importBtn.textContent = `✓ +${imported} ${skipped > 0 ? `(-${skipped} old)` : ''}`;
+            const skippedText = skipped > 0 ? ' ' + chrome.i18n.getMessage('importedSkipped', [skipped]) : '';
+            importBtn.textContent = chrome.i18n.getMessage('importedFeedback', [imported]) + skippedText;
             setTimeout(() => {
                 importBtn.textContent = originalText;
             }, 3000);
@@ -221,7 +222,8 @@ async function importNotesFromJSON() {
                 await loadAllNotes();
             }
         } catch (err) {
-            alert('Error importing file: ' + err.message);
+            const errorPrefix = chrome.i18n.getMessage('importError') || 'Error importing file:';
+            alert(errorPrefix + ' ' + err.message);
         }
         
         fileInput.value = '';

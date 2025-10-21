@@ -233,10 +233,15 @@ div[class*="StyledListContentPlayer"] {
     background: transparent;
     color: #888;
     border: 1px solid #333;
+    transition: all 0.2s ease;
 }
 
 .faceit-notes-btn-delete:hover {
     background: rgba(220, 53, 69, 0.1);
     color: #dc3545;
     border-color: #dc3545;
+}
+
+.faceit-notes-btn-delete:active {
+    transform: scale(0.95);
 }

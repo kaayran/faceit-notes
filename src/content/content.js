@@ -189,8 +189,29 @@ function openNoteModal(nickname) {
         updateNotesButtons();
     });
     
+    // Double-click delete confirmation
+    let deleteConfirmed = false;
+    let deleteTimeout = null;
+    const originalDeleteText = deleteBtn.textContent;
+    
     deleteBtn.addEventListener('click', async () => {
-        if (confirm(`Delete note for ${nickname}?`)) {
+        if (!deleteConfirmed) {
+            // First click - ask for confirmation
+            deleteConfirmed = true;
+            deleteBtn.textContent = 'Sure?';
+            deleteBtn.style.color = '#dc3545';
+            deleteBtn.style.borderColor = '#dc3545';
+            
+            // Reset after 3 seconds if not confirmed
+            deleteTimeout = setTimeout(() => {
+                deleteConfirmed = false;
+                deleteBtn.textContent = originalDeleteText;
+                deleteBtn.style.color = '';
+                deleteBtn.style.borderColor = '';
+            }, 3000);
+        } else {
+            // Second click - actually delete
+            clearTimeout(deleteTimeout);
             await savePlayerNote(nickname, '');
             closeModal();
             updateNotesButtons();

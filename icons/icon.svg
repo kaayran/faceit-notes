@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with dark gradient (like in extension) -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f0f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="noteGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F8F8F8;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.25"/>
+    </filter>
+    <filter id="innerShadow">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="128" height="128" rx="0" fill="url(#bgGradient)"/>
+  
+  <!-- Notepad icon -->
+  <g transform="translate(26, 20)" filter="url(#shadow)">
+    <!-- Main notepad body with gradient -->
+    <path d="M 10 4 L 54 4 L 54 14 L 66 14 L 66 84 L 10 84 L 10 4 Z" 
+          fill="url(#noteGradient)" 
+          stroke="#333333" 
+          stroke-width="2" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+    
+    <!-- Folded corner with shadow -->
+    <path d="M 54 4 L 54 14 L 66 14" 
+          fill="#FFE5D9" 
+          stroke="#333333" 
+          stroke-width="2" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+    
+    <!-- Top binding/header bar -->
+    <rect x="10" y="4" width="56" height="8" fill="#FF5500" opacity="0.15" rx="2"/>
+    
+    <!-- Lines on notepad (notes text) -->
+    <line x1="18" y1="28" x2="58" y2="28" stroke="#FF6622" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+    <line x1="18" y1="38" x2="58" y2="38" stroke="#FF6622" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="18" y1="48" x2="48" y2="48" stroke="#FF6622" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+    
+    <!-- Stylized "F" letter (Faceit logo inspired) -->
+    <g transform="translate(18, 56)">
+      <!-- F letter in bold style -->
+      <path d="M 0 0 L 0 24 M 0 0 L 18 0 M 0 11 L 14 11" 
+            stroke="#FF5500" 
+            stroke-width="4.5" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+            fill="none"/>
+    </g>
+    
+    <!-- Small decorative dots (like bullets) -->
+    <circle cx="18" cy="28" r="2" fill="#FF5500"/>
+    <circle cx="18" cy="38" r="2" fill="#FF5500"/>
+    <circle cx="18" cy="48" r="2" fill="#FF5500"/>
+  </g>
+  
+  <!-- Subtle corner accent (top-right) -->
+  <circle cx="104" cy="24" r="8" fill="white" opacity="0.1"/>
+  
+  <!-- Bottom badge/indicator -->
+  <g transform="translate(90, 90)">
+    <circle cx="0" cy="0" r="14" fill="white" opacity="0.95"/>
+    <text x="0" y="0" 
+          text-anchor="middle" 
+          dominant-baseline="central" 
+          font-family="Arial, sans-serif" 
+          font-size="16" 
+          font-weight="bold" 
+          fill="#FF5500">N</text>
+  </g>
+</svg>
+

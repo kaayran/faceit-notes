@@ -29,9 +29,24 @@
   "content_scripts": [
     {
       "matches": ["https://www.faceit.com/*"],
-      "js": ["src/content/content.js"],
+      "js": [
+        "src/shared/storage.js",
+        "src/shared/colors.js",
+        "src/content/buttons.js",
+        "src/content/modal.js",
+        "src/content/content.js"
+      ],
       "css": ["src/content/content.css"],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/shared/*.js",
+        "src/popup/*.js"
+      ],
+      "matches": ["<all_urls>"]
     }
   ]
 }

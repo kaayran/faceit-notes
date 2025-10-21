@@ -131,8 +131,8 @@ function renderNotes() {
     // Sort by nickname
     entries.sort((a, b) => a[0].localeCompare(b[0]));
     
-    notesList.innerHTML = entries.map(([nickname, note]) => {
-        const preview = note.length > 40 ? note.substring(0, 40) + '...' : note;
+    notesList.innerHTML = entries.map(([nickname, data]) => {
+        const preview = data.text.length > 40 ? data.text.substring(0, 40) + '...' : data.text;
         
         return `
             <div class="note-item">
@@ -182,9 +182,9 @@ function filterNotes(searchTerm) {
         const term = searchTerm.toLowerCase();
         filteredNotes = {};
         
-        for (const [nickname, note] of Object.entries(allNotes)) {
-            if (nickname.toLowerCase().includes(term) || note.toLowerCase().includes(term)) {
-                filteredNotes[nickname] = note;
+        for (const [nickname, data] of Object.entries(allNotes)) {
+            if (nickname.toLowerCase().includes(term) || data.text.toLowerCase().includes(term)) {
+                filteredNotes[nickname] = data;
             }
         }
     }
@@ -230,8 +230,11 @@ function openEditModal(nickname) {
     const nicknameEl = document.getElementById('editNickname');
     const textarea = document.getElementById('editTextarea');
     
+    const data = allNotes[nickname];
+    const noteText = data ? data.text : '';
+    
     nicknameEl.textContent = nickname;
-    textarea.value = allNotes[nickname] || '';
+    textarea.value = noteText;
     
     modal.style.display = 'flex';
     textarea.focus();
@@ -258,7 +261,10 @@ async function saveNote() {
     const note = textarea.value.trim();
     
     if (note) {
-        allNotes[currentEditingNickname] = note;
+        allNotes[currentEditingNickname] = {
+            text: note,
+            timestamp: Date.now()
+        };
     } else {
         delete allNotes[currentEditingNickname];
     }
@@ -317,6 +323,12 @@ function showSettingsScreen() {
     document.getElementById('mainScreen').style.display = 'none';
     document.getElementById('settingsScreen').style.display = 'block';
     loadColorSettings();
+    updateNotesStats();
+    
+    // Collapse all groups by default
+    document.querySelectorAll('.settings-group').forEach(group => {
+        group.classList.add('collapsed');
+    });
 }
 
 function hideSettingsScreen() {
@@ -410,6 +422,136 @@ function applyPreset(noNote, withNote) {
     document.getElementById('colorWithNote').value = withNote;
 }
 
+// Import/Export functions
+async function updateNotesStats() {
+    const result = await chrome.storage.local.get('playerNotes');
+    const notes = result.playerNotes || {};
+    const count = Object.keys(notes).length;
+    
+    const statsEl = document.getElementById('totalNotesCount');
+    if (statsEl) {
+        statsEl.textContent = count;
+    }
+}
+
+async function exportNotesToJSON() {
+    const result = await chrome.storage.local.get(['playerNotes', 'noteColors']);
+    
+    const exportData = {
+        version: '1.0',
+        exportDate: new Date().toISOString(),
+        notes: result.playerNotes || {},
+        settings: {
+            colors: result.noteColors || DEFAULT_COLORS
+        }
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `faceit-notes-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    
+    URL.revokeObjectURL(url);
+    
+    // Visual feedback
+    const exportBtn = document.getElementById('exportNotes');
+    const originalText = exportBtn.textContent;
+    exportBtn.textContent = '✓ Exported!';
+    setTimeout(() => {
+        exportBtn.textContent = originalText;
+    }, 2000);
+}
+
+async function importNotesFromJSON() {
+    const fileInput = document.getElementById('importFileInput');
+    
+    fileInput.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        try {
+            const text = await file.text();
+            const importData = JSON.parse(text);
+            
+            // Validate structure
+            if (!importData.notes || typeof importData.notes !== 'object') {
+                alert('Invalid file format');
+                return;
+            }
+            
+            const currentResult = await chrome.storage.local.get('playerNotes');
+            const currentNotes = currentResult.playerNotes || {};
+            
+            // Smart merge: keep newer notes based on timestamp
+            const mergedNotes = { ...currentNotes };
+            let imported = 0;
+            let skipped = 0;
+            
+            for (const [nickname, importedData] of Object.entries(importData.notes)) {
+                const existing = mergedNotes[nickname];
+                
+                if (!existing) {
+                    // New note
+                    mergedNotes[nickname] = importedData;
+                    imported++;
+                } else {
+                    // Compare timestamps
+                    const existingTime = existing.timestamp || 0;
+                    const importedTime = importedData.timestamp || 0;
+                    
+                    if (importedTime > existingTime) {
+                        // Imported is newer
+                        mergedNotes[nickname] = importedData;
+                        imported++;
+                    } else {
+                        // Keep existing
+                        skipped++;
+                    }
+                }
+            }
+            
+            await chrome.storage.local.set({ playerNotes: mergedNotes });
+            
+            // Import settings if available
+            if (importData.settings?.colors) {
+                await chrome.storage.local.set({ noteColors: importData.settings.colors });
+                applyColors(importData.settings.colors);
+            }
+            
+            // Update UI
+            updateNotesStats();
+            
+            // Visual feedback with stats
+            const importBtn = document.getElementById('importNotes');
+            const originalText = importBtn.textContent;
+            importBtn.textContent = `✓ +${imported} ${skipped > 0 ? `(-${skipped} old)` : ''}`;
+            setTimeout(() => {
+                importBtn.textContent = originalText;
+            }, 3000);
+            
+            // Reload notes screen if it's open
+            if (allNotes && Object.keys(allNotes).length > 0) {
+                await loadAllNotes();
+            }
+        } catch (err) {
+            alert('Error importing file: ' + err.message);
+        }
+        
+        fileInput.value = '';
+    };
+    
+    fileInput.click();
+}
+
+function toggleSettingsGroup(header) {
+    const group = header.closest('.settings-group');
+    group.classList.toggle('collapsed');
+}
+
 // Event listeners for notes screen
 document.addEventListener('DOMContentLoaded', function() {
     // Back button
@@ -494,5 +636,24 @@ document.addEventListener('DOMContentLoaded', function() {
             applyPreset(noNote, withNote);
         });
     });
+    
+    // Settings group collapse/expand
+    document.querySelectorAll('.settings-group-header').forEach(header => {
+        header.addEventListener('click', () => {
+            toggleSettingsGroup(header);
+        });
+    });
+    
+    // Export button
+    const exportBtn = document.getElementById('exportNotes');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportNotesToJSON);
+    }
+    
+    // Import button
+    const importBtn = document.getElementById('importNotes');
+    if (importBtn) {
+        importBtn.addEventListener('click', importNotesFromJSON);
+    }
 });
 

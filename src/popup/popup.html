@@ -54,47 +54,86 @@
         <div id="settingsScreen" class="screen" style="display: none;">
             <header class="notes-header">
                 <button id="settingsBackBtn" class="icon-btn">←</button>
-                <h1>Color Settings</h1>
+                <h1>Settings</h1>
             </header>
 
-            <div class="settings-section">
-                <div class="color-setting">
-                    <label>Icon without note</label>
-                    <input type="color" id="colorNoNote" value="#888888">
-                </div>
-                <div class="color-setting">
-                    <label>Icon with note</label>
-                    <input type="color" id="colorWithNote" value="#4caf50">
-                </div>
-            </div>
+            <div class="settings-container">
+                <!-- Color Settings -->
+                <div class="settings-group">
+                    <button class="settings-group-header">
+                        <span>Color Settings</span>
+                        <span class="collapse-icon">▼</span>
+                    </button>
+                    <div class="settings-group-content">
+                        <div class="settings-section">
+                            <div class="color-setting">
+                                <label>Icon without note</label>
+                                <input type="color" id="colorNoNote" value="#888888">
+                            </div>
+                            <div class="color-setting">
+                                <label>Icon with note</label>
+                                <input type="color" id="colorWithNote" value="#4caf50">
+                            </div>
+                        </div>
 
-            <div class="presets-section">
-                <h3>Presets</h3>
-                <button class="preset-btn" data-no-note="#888888" data-with-note="#4caf50">
-                    <span class="preset-dot" style="background: #888888;"></span>
-                    <span class="preset-dot" style="background: #4caf50;"></span>
-                    Default
-                </button>
-                <button class="preset-btn" data-no-note="#6c757d" data-with-note="#2196F3">
-                    <span class="preset-dot" style="background: #6c757d;"></span>
-                    <span class="preset-dot" style="background: #2196F3;"></span>
-                    Protanopia
-                </button>
-                <button class="preset-btn" data-no-note="#6c757d" data-with-note="#FF9800">
-                    <span class="preset-dot" style="background: #6c757d;"></span>
-                    <span class="preset-dot" style="background: #FF9800;"></span>
-                    Deuteranopia
-                </button>
-                <button class="preset-btn" data-no-note="#6c757d" data-with-note="#E91E63">
-                    <span class="preset-dot" style="background: #6c757d;"></span>
-                    <span class="preset-dot" style="background: #E91E63;"></span>
-                    Tritanopia
-                </button>
-            </div>
+                        <div class="presets-section">
+                            <h3>Presets</h3>
+                            <button class="preset-btn" data-no-note="#888888" data-with-note="#4caf50">
+                                <span class="preset-dot" style="background: #888888;"></span>
+                                <span class="preset-dot" style="background: #4caf50;"></span>
+                                Default
+                            </button>
+                            <button class="preset-btn" data-no-note="#6c757d" data-with-note="#2196F3">
+                                <span class="preset-dot" style="background: #6c757d;"></span>
+                                <span class="preset-dot" style="background: #2196F3;"></span>
+                                Protanopia
+                            </button>
+                            <button class="preset-btn" data-no-note="#6c757d" data-with-note="#FF9800">
+                                <span class="preset-dot" style="background: #6c757d;"></span>
+                                <span class="preset-dot" style="background: #FF9800;"></span>
+                                Deuteranopia
+                            </button>
+                            <button class="preset-btn" data-no-note="#6c757d" data-with-note="#E91E63">
+                                <span class="preset-dot" style="background: #6c757d;"></span>
+                                <span class="preset-dot" style="background: #E91E63;"></span>
+                                Tritanopia
+                            </button>
+                        </div>
 
-            <div class="settings-actions">
-                <button id="resetColors" class="btn btn-secondary">Reset</button>
-                <button id="saveColors" class="btn btn-primary">Save</button>
+                        <div class="settings-actions">
+                            <button id="resetColors" class="btn btn-secondary">Reset</button>
+                            <button id="saveColors" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Import/Export Settings -->
+                <div class="settings-group">
+                    <button class="settings-group-header">
+                        <span>Import / Export</span>
+                        <span class="collapse-icon">▼</span>
+                    </button>
+                    <div class="settings-group-content">
+                        <div class="settings-section">
+                            <p class="settings-description">Backup and restore your notes</p>
+                            
+                            <div class="import-export-actions">
+                                <button id="exportNotes" class="btn btn-primary full-width">
+                                    📤 Export Notes
+                                </button>
+                                <button id="importNotes" class="btn btn-secondary full-width">
+                                    📥 Import Notes
+                                </button>
+                                <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                            </div>
+
+                            <div class="notes-stats">
+                                <span class="stats-label">Total notes:</span>
+                                <span class="stats-value" id="totalNotesCount">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

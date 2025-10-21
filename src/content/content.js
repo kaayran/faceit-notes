@@ -10,12 +10,17 @@ async function saveNotes() {
 }
 
 function getPlayerNote(nickname) {
-    return playerNotes[nickname] || '';
+    const data = playerNotes[nickname];
+    if (!data) return '';
+    return data.text;
 }
 
 async function savePlayerNote(nickname, note) {
     if (note.trim()) {
-        playerNotes[nickname] = note.trim();
+        playerNotes[nickname] = {
+            text: note.trim(),
+            timestamp: Date.now()
+        };
     } else {
         delete playerNotes[nickname];
     }

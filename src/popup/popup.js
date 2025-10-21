@@ -78,9 +78,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 
     settingsBtn.addEventListener('click', function() {
-        console.log('Settings clicked');
-        // Add your logic here
+        showSettingsScreen();
     });
+    
+    // Load and apply colors on startup
+    loadAndApplyColors();
 });
 
 // Notes management
@@ -304,6 +306,110 @@ async function deleteNoteFromModal() {
     }
 }
 
+// Color settings
+const DEFAULT_COLORS = {
+    noNote: '#888888',
+    withNote: '#4caf50'
+};
+
+function showSettingsScreen() {
+    document.body.classList.add('notes-view');
+    document.getElementById('mainScreen').style.display = 'none';
+    document.getElementById('settingsScreen').style.display = 'block';
+    loadColorSettings();
+}
+
+function hideSettingsScreen() {
+    document.body.classList.remove('notes-view');
+    document.getElementById('mainScreen').style.display = 'block';
+    document.getElementById('settingsScreen').style.display = 'none';
+}
+
+async function loadColorSettings() {
+    const result = await chrome.storage.local.get('noteColors');
+    const colors = result.noteColors || DEFAULT_COLORS;
+    
+    document.getElementById('colorNoNote').value = colors.noNote;
+    document.getElementById('colorWithNote').value = colors.withNote;
+}
+
+async function loadAndApplyColors() {
+    const result = await chrome.storage.local.get('noteColors');
+    const colors = result.noteColors || DEFAULT_COLORS;
+    applyColors(colors);
+}
+
+function applyColors(colors) {
+    // Calculate lighter hover color
+    const hoverColor = lightenColor(colors.withNote, 15);
+    
+    // Apply to popup
+    document.documentElement.style.setProperty('--color-no-note', colors.noNote);
+    document.documentElement.style.setProperty('--color-with-note', colors.withNote);
+    document.documentElement.style.setProperty('--color-with-note-hover', hoverColor);
+    
+    // Notify content scripts to update colors
+    chrome.tabs.query({}, (tabs) => {
+        tabs.forEach(tab => {
+            chrome.tabs.sendMessage(tab.id, {
+                type: 'UPDATE_COLORS',
+                colors: {
+                    ...colors,
+                    withNoteHover: hoverColor
+                }
+            }).catch(() => {
+                // Tab might not have content script
+            });
+        });
+    });
+}
+
+function lightenColor(hex, percent) {
+    // Convert hex to RGB
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    
+    // Lighten
+    const newR = Math.min(255, Math.floor(r + (255 - r) * (percent / 100)));
+    const newG = Math.min(255, Math.floor(g + (255 - g) * (percent / 100)));
+    const newB = Math.min(255, Math.floor(b + (255 - b) * (percent / 100)));
+    
+    // Convert back to hex
+    return '#' + [newR, newG, newB].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
+async function saveColorSettings() {
+    const colors = {
+        noNote: document.getElementById('colorNoNote').value,
+        withNote: document.getElementById('colorWithNote').value
+    };
+    
+    await chrome.storage.local.set({ noteColors: colors });
+    applyColors(colors);
+    
+    // Visual feedback
+    const saveBtn = document.getElementById('saveColors');
+    const originalText = saveBtn.textContent;
+    saveBtn.textContent = 'Saved!';
+    setTimeout(() => {
+        saveBtn.textContent = originalText;
+    }, 1000);
+}
+
+async function resetColors() {
+    document.getElementById('colorNoNote').value = DEFAULT_COLORS.noNote;
+    document.getElementById('colorWithNote').value = DEFAULT_COLORS.withNote;
+    
+    await chrome.storage.local.set({ noteColors: DEFAULT_COLORS });
+    applyColors(DEFAULT_COLORS);
+}
+
+function applyPreset(noNote, withNote) {
+    document.getElementById('colorNoNote').value = noNote;
+    document.getElementById('colorWithNote').value = withNote;
+}
+
 // Event listeners for notes screen
 document.addEventListener('DOMContentLoaded', function() {
     // Back button
@@ -362,6 +468,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeEditModal();
             }
         }
+    });
+    
+    // Settings screen event listeners
+    const settingsBackBtn = document.getElementById('settingsBackBtn');
+    if (settingsBackBtn) {
+        settingsBackBtn.addEventListener('click', hideSettingsScreen);
+    }
+    
+    const saveColorsBtn = document.getElementById('saveColors');
+    if (saveColorsBtn) {
+        saveColorsBtn.addEventListener('click', saveColorSettings);
+    }
+    
+    const resetColorsBtn = document.getElementById('resetColors');
+    if (resetColorsBtn) {
+        resetColorsBtn.addEventListener('click', resetColors);
+    }
+    
+    // Preset buttons
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const noNote = btn.getAttribute('data-no-note');
+            const withNote = btn.getAttribute('data-with-note');
+            applyPreset(noNote, withNote);
+        });
     });
 });
 

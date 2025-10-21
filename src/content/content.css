@@ -1,3 +1,9 @@
+:root {
+    --color-no-note: #888888;
+    --color-with-note: #4caf50;
+    --color-with-note-hover: #66bb6a;
+}
+
 .faceit-notes-btn {
     display: inline-flex;
     align-items: center;
@@ -10,25 +16,19 @@
     z-index: 100;
     user-select: none;
     flex-shrink: 0;
-    color: currentColor;
+    background: transparent;
+    opacity: 0.7;
+    margin: 0;
+    padding: 2px;
+    color: var(--color-no-note);
+    position: relative;
+    order: -1; /* Ensures it appears first in flexbox */
 }
 
 .faceit-notes-btn svg {
     width: 16px;
     height: 16px;
     transition: all 0.2s ease;
-}
-
-/* Native style - always looks like part of the interface */
-.faceit-notes-btn {
-    background: transparent;
-    opacity: 0.7;
-    margin: 0;
-    padding: 2px;
-    color: inherit;
-    position: relative;
-    z-index: 10;
-    order: -1; /* Ensures it appears first in flexbox */
 }
 
 .faceit-notes-btn:hover {
@@ -39,14 +39,13 @@
 }
 
 .faceit-notes-btn.has-note {
-    color: #4caf50;
+    color: var(--color-with-note);
     opacity: 0.85;
 }
 
 .faceit-notes-btn.has-note:hover {
-    color: #66bb6a;
     opacity: 1;
-    box-shadow: 0 0 12px rgba(76, 175, 80, 0.4);
+    box-shadow: 0 0 12px var(--color-with-note);
 }
 
 /* For icons that need absolute positioning (when EndSlotContainer not found) */
@@ -219,14 +218,14 @@ div[class*="StyledListContentPlayer"] {
 }
 
 .faceit-notes-btn-save {
-    background: #4caf50;
+    background: var(--color-with-note);
     color: white;
 }
 
 .faceit-notes-btn-save:hover {
-    background: #66bb6a;
+    background: var(--color-with-note-hover);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 2px 8px var(--color-with-note);
 }
 
 .faceit-notes-btn-delete {

@@ -22,6 +22,18 @@
   "settingsButton": {
     "message": "Settings",
     "description": "Button to open settings"
+  },
+  "extensionStatus": {
+    "message": "Extension Status",
+    "description": "Label for extension status toggle"
+  },
+  "statusEnabled": {
+    "message": "Enabled",
+    "description": "Status text when extension is enabled"
+  },
+  "statusDisabled": {
+    "message": "Disabled",
+    "description": "Status text when extension is disabled"
   }
 }
 

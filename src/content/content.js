@@ -174,7 +174,7 @@ function updateNotesButtons() {
     });
 }
 
-const processedElements = new WeakSet();
+let processedElements = new WeakSet();
 
 function isProcessed(element) {
     return processedElements.has(element);
@@ -182,6 +182,10 @@ function isProcessed(element) {
 
 function markAsProcessed(element) {
     processedElements.add(element);
+}
+
+function clearProcessedElements() {
+    processedElements = new WeakSet();
 }
 
 function waitForElement(selector, conditionFn, callback, maxAttempts = 50) {
@@ -325,8 +329,24 @@ function addButtonToElement(container, nickname) {
     }
 }
 
+// Extension state management
+let isExtensionEnabled = true;
+let observer = null;
+
+async function checkExtensionState() {
+    const result = await chrome.storage.local.get('extensionEnabled');
+    isExtensionEnabled = result.extensionEnabled !== false; // Default to true
+    return isExtensionEnabled;
+}
+
 function setupObserver() {
-    const observer = new MutationObserver((mutations) => {
+    if (observer) {
+        observer.disconnect();
+    }
+    
+    observer = new MutationObserver((mutations) => {
+        if (!isExtensionEnabled) return;
+        
         let shouldUpdate = false;
         
         for (const mutation of mutations) {
@@ -351,15 +371,62 @@ function setupObserver() {
     });
 }
 
-async function init() {
-    await loadNotes();
+function enableExtension() {
+    isExtensionEnabled = true;
+    
+    // Clear processed elements to re-process all elements
+    clearProcessedElements();
+    
+    // Add buttons and setup observer
     addNoteButtons();
     setupObserver();
     
     if (window.location.href.includes('/room/')) {
-        setTimeout(() => {
-            addNotesButtonsToMatchRoom();
-        }, 2000);
+        addNotesButtonsToMatchRoom();
+    }
+}
+
+function disableExtension() {
+    if (isExtensionEnabled) {
+        isExtensionEnabled = false;
+        
+        // Disconnect observer
+        if (observer) {
+            observer.disconnect();
+            observer = null;
+        }
+        
+        // Remove all note buttons
+        document.querySelectorAll('.faceit-notes-btn').forEach(btn => btn.remove());
+        
+        // Remove any open modals
+        const modal = document.getElementById('faceit-notes-modal');
+        if (modal) {
+            modal.remove();
+        }
+        
+        // Clear processed elements for clean re-enable
+        clearProcessedElements();
+    }
+}
+
+// Listen for state changes from popup
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'EXTENSION_STATE_CHANGED') {
+        if (message.enabled) {
+            enableExtension();
+        } else {
+            disableExtension();
+        }
+    }
+});
+
+async function init() {
+    await loadNotes();
+    const enabled = await checkExtensionState();
+    
+    if (enabled) {
+        enableExtension();
     }
 }
 

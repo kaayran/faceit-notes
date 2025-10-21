@@ -11,27 +11,23 @@
         <header>
             <h1 data-i18n="popupTitle">Faceit Notes</h1>
         </header>
-        <main>
-            <!-- Extension Toggle -->
-            <div class="toggle-section">
-                <div class="toggle-info">
-                    <span class="toggle-label" data-i18n="extensionStatus">Extension Status</span>
-                    <span class="toggle-status" id="toggleStatus" data-i18n="statusEnabled">Enabled</span>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="extensionToggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
+        
+        <!-- Extension Toggle -->
+        <div class="toggle-section">
+            <div class="toggle-info">
+                <span class="toggle-label" data-i18n="extensionStatus">Extension Status</span>
+                <span class="toggle-status" id="toggleStatus" data-i18n="statusEnabled">Enabled</span>
             </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="extensionToggle" checked>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
 
-            <div class="info">
-                <p data-i18n="popupInfo">Extension for making player notes on Faceit</p>
-            </div>
-            <div class="actions">
-                <button id="viewNotes" class="btn btn-primary" data-i18n="viewNotesButton">View Notes</button>
-                <button id="settings" class="btn btn-secondary" data-i18n="settingsButton">Settings</button>
-            </div>
-        </main>
+        <div class="actions">
+            <button id="viewNotes" class="btn btn-primary" data-i18n="viewNotesButton">View Notes</button>
+            <button id="settings" class="btn btn-secondary" data-i18n="settingsButton">Settings</button>
+        </div>
     </div>
     <script src="popup.js"></script>
 </body>

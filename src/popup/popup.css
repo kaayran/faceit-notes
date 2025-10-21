@@ -5,10 +5,10 @@
 }
 
 body {
-    width: 300px;
+    width: 280px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: #1a1a1a;
-    color: #ffffff;
+    color: #e0e0e0;
 }
 
 .container {
@@ -18,60 +18,53 @@ body {
 header {
     margin-bottom: 16px;
     padding-bottom: 12px;
-    border-bottom: 2px solid #ff5500;
+    border-bottom: 1px solid #2a2a2a;
 }
 
 header h1 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #ff5500;
-}
-
-.info {
-    margin-bottom: 20px;
-}
-
-.info p {
-    font-size: 14px;
-    color: #b8b8b8;
-    line-height: 1.5;
+    font-size: 16px;
+    font-weight: 500;
+    color: #e0e0e0;
 }
 
 .actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .btn {
-    padding: 10px 16px;
+    padding: 8px 12px;
     border: none;
-    border-radius: 6px;
-    font-size: 14px;
+    border-radius: 5px;
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
+    text-align: left;
 }
 
 .btn-primary {
-    background: #ff5500;
+    background: #4caf50;
     color: #ffffff;
 }
 
 .btn-primary:hover {
-    background: #e64d00;
+    background: #66bb6a;
     transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
 
 .btn-secondary {
-    background: #2a2a2a;
-    color: #ffffff;
-    border: 1px solid #404040;
+    background: transparent;
+    color: #888;
+    border: 1px solid #333;
 }
 
 .btn-secondary:hover {
-    background: #353535;
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.05);
+    color: #b8b8b8;
+    border-color: #404040;
 }
 
 /* Toggle Section */
@@ -79,35 +72,35 @@ header h1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 16px;
-    background: #252525;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border: 1px solid #333333;
-    transition: all 0.3s ease;
+    padding: 12px;
+    background: #0f0f0f;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    border: 1px solid #2a2a2a;
+    transition: all 0.2s ease;
 }
 
 .toggle-section:hover {
-    border-color: #ff5500;
-    background: #2a2a2a;
+    border-color: #333;
+    background: #141414;
 }
 
 .toggle-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .toggle-label {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
-    color: #ffffff;
+    color: #e0e0e0;
 }
 
 .toggle-status {
-    font-size: 12px;
-    color: #b8b8b8;
-    transition: color 0.3s ease;
+    font-size: 11px;
+    color: #888;
+    transition: color 0.2s ease;
 }
 
 .toggle-status.enabled {
@@ -115,15 +108,15 @@ header h1 {
 }
 
 .toggle-status.disabled {
-    color: #f44336;
+    color: #dc3545;
 }
 
 /* Toggle Switch */
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 52px;
-    height: 28px;
+    width: 44px;
+    height: 24px;
     cursor: pointer;
 }
 
@@ -139,39 +132,39 @@ header h1 {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #404040;
-    border-radius: 28px;
-    transition: all 0.3s ease;
-    border: 2px solid #505050;
+    background-color: #333;
+    border-radius: 24px;
+    transition: all 0.2s ease;
+    border: 1px solid #404040;
 }
 
 .toggle-slider:before {
     position: absolute;
     content: "";
-    height: 20px;
-    width: 20px;
-    left: 2px;
-    bottom: 2px;
-    background-color: #ffffff;
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #888;
     border-radius: 50%;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
 }
 
 .toggle-switch input:checked + .toggle-slider {
-    background-color: #ff5500;
-    border-color: #ff5500;
+    background-color: #4caf50;
+    border-color: #4caf50;
 }
 
 .toggle-switch input:checked + .toggle-slider:before {
-    transform: translateX(24px);
+    transform: translateX(20px);
+    background-color: #ffffff;
 }
 
 .toggle-switch:hover .toggle-slider {
-    box-shadow: 0 0 8px rgba(255, 85, 0, 0.3);
+    border-color: #505050;
 }
 
-.toggle-switch input:checked + .toggle-slider:hover {
-    background-color: #e64d00;
+.toggle-switch input:checked:hover + .toggle-slider {
+    background-color: #66bb6a;
 }
 

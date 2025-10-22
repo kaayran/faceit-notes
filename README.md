@@ -31,3 +31,10 @@
 - **Real-time Updates** - Changes reflect immediately across all tabs
 - **Local Storage** - All data stored locally in your browser
 - **Internationalization** - Ready for multiple languages (English included)
+
+## Roadmap
+
+- [ ] Publish to Chrome Web Store
+- [ ] Link notes by FACEIT ID instead of nickname (handle nickname changes)
+- [ ] Add more languages (Russian, Spanish, German, French)
+- [ ] Cloud synchronization (optional feature)

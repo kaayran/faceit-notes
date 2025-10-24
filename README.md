@@ -39,6 +39,7 @@
 
 ## Roadmap
 
+- [x] **Link notes by FACEIT Player ID** - Notes persist across nickname changes
 - [ ] Publish to Chrome Web Store
 - [ ] Add more languages (Russian, Spanish, German, French)
 - [ ] Cloud synchronization (optional feature)

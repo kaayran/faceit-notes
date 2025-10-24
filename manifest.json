@@ -24,13 +24,16 @@
     "storage"
   ],
   "host_permissions": [
-    "https://www.faceit.com/*"
+    "https://www.faceit.com/*",
+    "https://faceit-notes-api-proxy.vercel.app/*"
   ],
   "content_scripts": [
     {
       "matches": ["https://www.faceit.com/*"],
       "js": [
+        "src/shared/utils.js",
         "src/shared/storage.js",
+        "src/shared/api.js",
         "src/shared/colors.js",
         "src/content/buttons.js",
         "src/content/modal.js",

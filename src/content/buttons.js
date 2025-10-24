@@ -27,7 +27,7 @@ function clearProcessedElements() {
 /**
  * Create note button/icon
  */
-function createNoteButton(nickname) {
+function createNoteButton(nickname, playerId = null) {
     const container = document.createElement('div');
     container.className = 'faceit-notes-btn';
     
@@ -65,10 +65,18 @@ function createNoteButton(nickname) {
     
     container.appendChild(svg);
     
-    container.addEventListener('click', (e) => {
+    // Store playerId on the button element for later retrieval
+    if (playerId) {
+        container.setAttribute('data-player-id', playerId);
+    }
+    
+    container.addEventListener('click', async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        openNoteModal(nickname);
+        
+        // Get playerId from attribute or lookup
+        const storedPlayerId = container.getAttribute('data-player-id') || getPlayerIdByNickname(nickname);
+        await openNoteModal(nickname, storedPlayerId);
     });
     
     let tooltip = null;
@@ -172,7 +180,7 @@ function updateNotesButtons() {
 /**
  * Add button to element
  */
-function addButtonToElement(container, nickname) {
+function addButtonToElement(container, nickname, playerId = null) {
     // Check if button already exists in container or its EndSlotContainer
     const existingButton = container.querySelector('.faceit-notes-btn');
     if (existingButton) return;
@@ -186,8 +194,14 @@ function addButtonToElement(container, nickname) {
         }
     });
     
-    const icon = createNoteButton(nickname);
+    // If playerId not provided, try to get it from mapping
+    const actualPlayerId = playerId || getPlayerIdByNickname(nickname);
+    
+    const icon = createNoteButton(nickname, actualPlayerId);
     icon.setAttribute('data-nickname', nickname);
+    if (actualPlayerId) {
+        icon.setAttribute('data-player-id', actualPlayerId);
+    }
     
     // Try to find EndSlotContainer first (preferred location)
     const endSlotContainer = container.querySelector('div[class*="EndSlotContainer"]');

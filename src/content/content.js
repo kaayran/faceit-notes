@@ -256,6 +256,69 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 /**
+ * Load match players and update mappings
+ */
+async function loadMatchPlayers() {
+    // Check if we're in a match room
+    const matchId = getCurrentMatchId();
+    
+    if (!matchId) {
+        return;
+    }
+    
+    try {
+        console.log(`Loading players for match ${matchId}...`);
+        const players = await loadPlayersFromCurrentMatch();
+        
+        if (players && players.length > 0) {
+            console.log(`Loaded ${players.length} players, updating mappings...`);
+            
+            // Update player mappings from API data
+            updatePlayerMappingsFromApi(players);
+            
+            console.log('Player mappings updated successfully');
+        }
+    } catch (error) {
+        console.error('Failed to load match players:', error);
+    }
+}
+
+/**
+ * Setup URL change detection
+ */
+function setupUrlChangeDetection() {
+    let lastUrl = window.location.href;
+    
+    // Detect URL changes (for SPA navigation)
+    const urlObserver = new MutationObserver(() => {
+        const currentUrl = window.location.href;
+        
+        if (currentUrl !== lastUrl) {
+            lastUrl = currentUrl;
+            
+            // If navigated to a match room, load players
+            if (currentUrl.includes('/room/')) {
+                console.log('Navigated to match room, loading players...');
+                loadMatchPlayers();
+            }
+        }
+    });
+    
+    urlObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    
+    // Also listen to popstate for back/forward navigation
+    window.addEventListener('popstate', () => {
+        if (window.location.href.includes('/room/')) {
+            console.log('Navigated to match room via history, loading players...');
+            loadMatchPlayers();
+        }
+    });
+}
+
+/**
  * Initialize
  */
 async function init() {
@@ -265,6 +328,14 @@ async function init() {
     
     if (enabled) {
         enableExtension();
+    }
+    
+    // Setup URL change detection
+    setupUrlChangeDetection();
+    
+    // If already in a match room, load players immediately
+    if (window.location.href.includes('/room/')) {
+        await loadMatchPlayers();
     }
 }
 

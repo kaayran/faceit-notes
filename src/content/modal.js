@@ -3,7 +3,7 @@
 /**
  * Open note modal
  */
-function openNoteModal(nickname) {
+async function openNoteModal(nickname, playerId = null) {
     const existingModal = document.getElementById('faceit-notes-modal');
     if (existingModal) {
         existingModal.remove();
@@ -13,7 +13,18 @@ function openNoteModal(nickname) {
     modal.id = 'faceit-notes-modal';
     modal.className = 'faceit-notes-modal';
     
-    const currentNote = getPlayerNote(nickname);
+    // Try to get playerId if not provided
+    let actualPlayerId = playerId || getPlayerIdByNickname(nickname);
+    let actualNickname = nickname;
+    
+    console.log(`[Modal] Opening modal for ${nickname}, playerId: ${actualPlayerId || 'NOT FOUND'}`);
+    
+    // Show warning if no playerId
+    if (!actualPlayerId) {
+        console.warn(`[Modal] WARNING: No playerId found for ${nickname}. Note will not be saved!`);
+    }
+    
+    const currentNote = getPlayerNote(actualNickname);
     
     const placeholder = chrome.i18n.getMessage('addNotePlaceholder') || 'Add note...';
     const deleteText = chrome.i18n.getMessage('deleteButton') || 'Delete';
@@ -22,7 +33,7 @@ function openNoteModal(nickname) {
     modal.innerHTML = `
         <div class="faceit-notes-modal-content">
             <div class="faceit-notes-modal-header">
-                <span class="faceit-notes-nickname">${nickname}</span>
+                <span class="faceit-notes-nickname">${escapeHtml(actualNickname)}</span>
                 <button class="faceit-notes-close">✕</button>
             </div>
             <textarea 
@@ -68,7 +79,11 @@ function openNoteModal(nickname) {
     
     saveBtn.addEventListener('click', async () => {
         const note = textarea.value;
-        await savePlayerNote(nickname, note);
+        
+        console.log(`[Modal] Saving note for ${actualNickname} (playerId: ${actualPlayerId || 'fallback to nickname'})`);
+        
+        // Pass playerId if available, otherwise will fallback to nickname
+        await savePlayerNote(actualNickname, note, actualPlayerId);
         closeModal();
         updateNotesButtons();
     });
@@ -96,7 +111,7 @@ function openNoteModal(nickname) {
         } else {
             // Second click - actually delete
             clearTimeout(deleteTimeout);
-            await savePlayerNote(nickname, '');
+            await savePlayerNote(actualNickname, '', actualPlayerId);
             closeModal();
             updateNotesButtons();
         }

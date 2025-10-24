@@ -34,10 +34,15 @@ function renderNotes() {
     notesList.style.display = 'flex';
     emptyState.style.display = 'none';
     
-    // Sort by nickname
-    entries.sort((a, b) => a[0].localeCompare(b[0]));
+    // Sort by nickname (from data, not key)
+    entries.sort((a, b) => {
+        const nicknameA = a[1].nickname || a[0];
+        const nicknameB = b[1].nickname || b[0];
+        return nicknameA.localeCompare(nicknameB);
+    });
     
-    notesList.innerHTML = entries.map(([nickname, data]) => {
+    notesList.innerHTML = entries.map(([playerId, data]) => {
+        const nickname = data.nickname || playerId; // Fallback to playerId if no nickname
         const preview = data.text.length > 40 ? data.text.substring(0, 40) + '...' : data.text;
         
         return `
@@ -47,8 +52,8 @@ function renderNotes() {
                     <div class="note-preview">${escapeHtml(preview)}</div>
                 </div>
                 <div class="note-actions">
-                    <button class="note-btn edit" data-nickname="${escapeHtml(nickname)}" title="Edit">✎</button>
-                    <button class="note-btn delete" data-nickname="${escapeHtml(nickname)}" title="Delete">✕</button>
+                    <button class="note-btn edit" data-player-id="${escapeHtml(playerId)}" data-nickname="${escapeHtml(nickname)}" title="Edit">✎</button>
+                    <button class="note-btn delete" data-player-id="${escapeHtml(playerId)}" data-nickname="${escapeHtml(nickname)}" title="Delete">✕</button>
                 </div>
             </div>
         `;
@@ -58,16 +63,18 @@ function renderNotes() {
     document.querySelectorAll('.note-btn.edit').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
+            const playerId = btn.getAttribute('data-player-id');
             const nickname = btn.getAttribute('data-nickname');
-            openEditModal(nickname);
+            openEditModal(playerId, nickname);
         });
     });
     
     document.querySelectorAll('.note-btn.delete').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
+            const playerId = btn.getAttribute('data-player-id');
             const nickname = btn.getAttribute('data-nickname');
-            deleteNoteDirectly(nickname, btn);
+            deleteNoteDirectly(playerId, nickname, btn);
         });
     });
 }
@@ -82,9 +89,10 @@ function filterNotes(searchTerm) {
         const term = searchTerm.toLowerCase();
         filteredNotes = {};
         
-        for (const [nickname, data] of Object.entries(allNotes)) {
+        for (const [playerId, data] of Object.entries(allNotes)) {
+            const nickname = data.nickname || playerId;
             if (nickname.toLowerCase().includes(term) || data.text.toLowerCase().includes(term)) {
-                filteredNotes[nickname] = data;
+                filteredNotes[playerId] = data;
             }
         }
     }
@@ -97,8 +105,8 @@ function filterNotes(searchTerm) {
  */
 const deleteStates = new Map();
 
-async function deleteNoteDirectly(nickname, btn) {
-    const key = nickname;
+async function deleteNoteDirectly(playerId, nickname, btn) {
+    const key = playerId;
     
     if (!deleteStates.has(key)) {
         deleteStates.set(key, true);
@@ -117,7 +125,7 @@ async function deleteNoteDirectly(nickname, btn) {
     } else {
         deleteStates.delete(key);
         
-        delete allNotes[nickname];
+        delete allNotes[playerId];
         await saveNotes(allNotes);
         
         const searchTerm = document.getElementById('searchInput')?.value || '';
@@ -128,16 +136,16 @@ async function deleteNoteDirectly(nickname, btn) {
 /**
  * Open edit modal
  */
-function openEditModal(nickname) {
-    currentEditingNickname = nickname;
+function openEditModal(playerId, nickname) {
+    currentEditingNickname = playerId; // Store playerId for editing
     const modal = document.getElementById('editModal');
     const nicknameEl = document.getElementById('editNickname');
     const textarea = document.getElementById('editTextarea');
     
-    const data = allNotes[nickname];
+    const data = allNotes[playerId];
     const noteText = data ? data.text : '';
     
-    nicknameEl.textContent = nickname;
+    nicknameEl.textContent = nickname; // Display nickname to user
     textarea.value = noteText;
     
     modal.style.display = 'flex';
@@ -165,18 +173,21 @@ function closeEditModal() {
  * Save note from modal
  */
 async function saveNote() {
-    if (!currentEditingNickname) return;
+    if (!currentEditingNickname) return; // currentEditingNickname actually stores playerId
     
+    const playerId = currentEditingNickname;
     const textarea = document.getElementById('editTextarea');
     const note = textarea.value.trim();
     
     if (note) {
-        allNotes[currentEditingNickname] = {
+        const existingData = allNotes[playerId] || {};
+        allNotes[playerId] = {
             text: note,
+            nickname: existingData.nickname, // Preserve nickname
             timestamp: Date.now()
         };
     } else {
-        delete allNotes[currentEditingNickname];
+        delete allNotes[playerId];
     }
     
     await saveNotes(allNotes);
@@ -194,8 +205,9 @@ let deleteConfirmed = false;
 let deleteTimeout = null;
 
 async function deleteNoteFromModal() {
-    if (!currentEditingNickname) return;
+    if (!currentEditingNickname) return; // currentEditingNickname actually stores playerId
     
+    const playerId = currentEditingNickname;
     const deleteBtn = document.getElementById('deleteNoteBtn');
     
     if (!deleteConfirmed) {
@@ -213,7 +225,7 @@ async function deleteNoteFromModal() {
     } else {
         clearTimeout(deleteTimeout);
         
-        delete allNotes[currentEditingNickname];
+        delete allNotes[playerId];
         await saveNotes(allNotes);
         
         const searchTerm = document.getElementById('searchInput')?.value || '';

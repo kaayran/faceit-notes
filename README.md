@@ -1,7 +1,12 @@
 <div align="center">
   <img src="icons/icon128.png" alt="FACEIT Notes" width="96" height="96">
   <h1>FACEIT Notes</h1>
-  <p>Chrome extension for managing player notes on <a href="https://www.faceit.com">FACEIT</a></p>
+  <p>Browser extension for managing player notes on <a href="https://www.faceit.com">FACEIT</a></p>
+  <p>
+    <a href="https://kaayran.github.io/faceit-notes-website/">🌐 Website</a> •
+    <a href="https://kaayran.github.io/faceit-notes-website/privacy.html">📋 Privacy Policy</a> •
+    <a href="https://github.com/kaayran/faceit-notes/issues">🐛 Report Issue</a>
+  </p>
 </div>
 
 ## Features

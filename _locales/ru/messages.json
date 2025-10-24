@@ -1,14 +1,14 @@
 {
   "extensionName": {
-    "message": "Faceit Notes",
+    "message": "FACEIT Notes",
     "description": "Name of the extension"
   },
   "extensionDescription": {
-    "message": "Расширение для создания заметок об игроках на Faceit.",
+    "message": "Расширение для создания заметок об игроках на FACEIT.",
     "description": "Description of the extension"
   },
   "popupTitle": {
-    "message": "Faceit Notes",
+    "message": "FACEIT Notes",
     "description": "Title in the popup"
   },
   "viewNotesButton": {

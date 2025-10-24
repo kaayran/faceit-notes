@@ -2,6 +2,7 @@
 
 let cachedNotes = {}; // Stores notes by playerId: { playerId: { text, nickname, timestamp } }
 let playerMapping = {}; // Maps nickname -> playerId for quick lookup
+let currentNicknamesMap = {}; // Maps playerId -> current nickname (from /api/match)
 
 /**
  * Load all notes from storage
@@ -108,48 +109,80 @@ function getPlayerNoteDataById(playerId) {
 }
 
 /**
- * Save note for specific player
- * @param {string} nickname - Player nickname (for display)
- * @param {string} noteText - Note text
- * @param {string} playerId - Optional player ID (if known from API)
+ * Get current nickname for playerId
  */
-async function savePlayerNote(nickname, noteText, playerId = null) {
+function getCurrentNicknameByPlayerId(playerId) {
+    return currentNicknamesMap[playerId] || null;
+}
+
+/**
+ * Save note for specific player
+ * @param {string} lobbyNickname - Nickname as shown in match lobby (for finding player)
+ * @param {string} noteText - Note text
+ * @param {string} playerId - Player ID from API
+ * @param {string} currentNickname - Current nickname from API (optional, will be looked up if not provided)
+ */
+async function savePlayerNote(lobbyNickname, noteText, playerId = null, currentNickname = null) {
     console.log(`[Storage] ========== SAVING NOTE ==========`);
-    console.log(`[Storage] Nickname: "${nickname}"`);
+    console.log(`[Storage] Lobby nickname: "${lobbyNickname}"`);
+    console.log(`[Storage] Current nickname provided: "${currentNickname || 'null'}"`);
     console.log(`[Storage] PlayerId provided: ${playerId || 'null'}`);
-    console.log(`[Storage] PlayerId from mapping: ${playerMapping[nickname] || 'null'}`);
-    console.log(`[Storage] All mappings:`, Object.entries(playerMapping).map(([nick, id]) => `"${nick}" -> "${id}"`));
+    console.log(`[Storage] PlayerId from mapping: ${playerMapping[lobbyNickname] || 'null'}`);
     
     // If playerId not provided, try to get it from mapping
-    const actualPlayerId = playerId || playerMapping[nickname];
+    const actualPlayerId = playerId || playerMapping[lobbyNickname];
+    
+    // If currentNickname not provided, try to look it up
+    if (!currentNickname && actualPlayerId) {
+        currentNickname = currentNicknamesMap[actualPlayerId];
+        console.log(`[Storage] Current nickname from map: "${currentNickname || 'null'}"`);
+    }
     
     console.log(`[Storage] Actual PlayerId used: ${actualPlayerId || 'FALLBACK TO NICKNAME'}`);
     console.log(`[Storage] Note text: "${noteText.substring(0, 50)}${noteText.length > 50 ? '...' : ''}"`);
     
     if (!actualPlayerId) {
-        console.error(`[Storage] ❌ ERROR: No playerId found for "${nickname}"!`);
-        console.error(`[Storage] This should not happen if match-stats API was called correctly.`);
+        console.error(`[Storage] ❌ ERROR: No playerId found for "${lobbyNickname}"!`);
         console.error(`[Storage] Falling back to nickname as storage key.`);
     }
     
     // Use playerId as storage key, or nickname as fallback
-    const storageKey = actualPlayerId || nickname;
+    const storageKey = actualPlayerId || lobbyNickname;
     console.log(`[Storage] Storage key: "${storageKey}"`);
     
     if (noteText.trim()) {
+        // Get existing note to check current nickname
+        const existingNote = cachedNotes[storageKey];
+        
+        // Determine which nickname to save as "main"
+        let finalNickname = currentNickname || lobbyNickname;
+        let finalPreviousNickname = existingNote?.previousNickname;
+        
+        // If currentNickname differs from lobbyNickname, save lobby as previous
+        if (currentNickname && currentNickname !== lobbyNickname) {
+            finalNickname = currentNickname;
+            finalPreviousNickname = lobbyNickname;
+            console.log(`[Storage] ✓ Saving with current nickname "${currentNickname}", lobby nickname "${lobbyNickname}" as previous`);
+        } else {
+            console.log(`[Storage] ✓ Saving with nickname "${finalNickname}"`);
+        }
+        
         cachedNotes[storageKey] = {
             text: noteText.trim(),
-            nickname: nickname,
+            nickname: finalNickname,
+            previousNickname: finalPreviousNickname,
             timestamp: Date.now()
         };
         
         // Update mapping
         if (actualPlayerId) {
-            playerMapping[nickname] = actualPlayerId;
+            playerMapping[lobbyNickname] = actualPlayerId;
+            if (currentNickname && currentNickname !== lobbyNickname) {
+                playerMapping[currentNickname] = actualPlayerId;
+            }
             console.log(`[Storage] ✓ Note saved with playerId: ${actualPlayerId}`);
         } else {
-            // For fallback, store nickname->nickname mapping
-            playerMapping[nickname] = nickname;
+            playerMapping[lobbyNickname] = lobbyNickname;
             console.log(`[Storage] ⚠️ Note saved with nickname fallback`);
         }
         
@@ -157,7 +190,7 @@ async function savePlayerNote(nickname, noteText, playerId = null) {
     } else {
         // Delete note
         delete cachedNotes[storageKey];
-        delete playerMapping[nickname];
+        delete playerMapping[lobbyNickname];
         console.log(`[Storage] ✓ Note deleted`);
     }
     
@@ -211,28 +244,45 @@ function hasNoteById(playerId) {
 
 /**
  * Update player mappings from API data
- * @param {Array} players - Array of player objects from API with {playerId, nickname}
+ * @param {Array} players - Array of player objects from API with {playerId, lobbyNickname, currentNickname}
  */
 function updatePlayerMappingsFromApi(players) {
     console.log('[Storage] ========== UPDATING MAPPINGS ==========');
     console.log(`[Storage] Processing ${players.length} players from API`);
     
     for (const player of players) {
-        const { playerId, nickname } = player;
+        const { playerId, lobbyNickname, currentNickname } = player;
         
-        if (!playerId || !nickname) {
+        if (!playerId || !lobbyNickname) {
             console.warn(`[Storage] ⚠️ Skipping player with missing data:`, player);
             continue;
         }
         
-        // Update mapping
-        playerMapping[nickname] = playerId;
-        console.log(`[Storage] ✓ "${nickname}" -> "${playerId}"`);
+        // Map LOBBY nickname to playerId (for finding players on page)
+        playerMapping[lobbyNickname] = playerId;
+        console.log(`[Storage] ✓ Lobby: "${lobbyNickname}" -> "${playerId}"`);
         
-        // If player has a note, update nickname in case it changed
+        // Store current nickname by playerId
+        if (currentNickname) {
+            currentNicknamesMap[playerId] = currentNickname;
+            
+            // Also map CURRENT nickname to playerId (in case it's used somewhere)
+            if (currentNickname !== lobbyNickname) {
+                playerMapping[currentNickname] = playerId;
+                console.log(`[Storage]   └─ Current: "${currentNickname}" -> "${playerId}"`);
+            }
+        }
+        
+        // If player has a note, update to use CURRENT nickname
         if (cachedNotes[playerId]) {
-            cachedNotes[playerId].nickname = nickname;
-            console.log(`[Storage]   └─ Updated nickname for existing note`);
+            const savedNickname = cachedNotes[playerId].nickname;
+            
+            // Update to current nickname
+            if (currentNickname && savedNickname !== currentNickname) {
+                cachedNotes[playerId].previousNickname = savedNickname;
+                cachedNotes[playerId].nickname = currentNickname;
+                console.log(`[Storage]   └─ Note updated: "${savedNickname}" → "${currentNickname}"`);
+            }
         }
     }
     

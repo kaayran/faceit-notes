@@ -118,10 +118,23 @@ async function exportNotesToJSON() {
     const allNotes = getAllNotes();
     const colors = await loadColors();
     
+    // Format notes with readable nicknames
+    const formattedNotes = {};
+    Object.entries(allNotes).forEach(([playerId, data]) => {
+        const nicknameInfo = data.previousNickname && data.previousNickname !== data.nickname
+            ? `${data.nickname} (was: ${data.previousNickname})`
+            : data.nickname;
+        
+        formattedNotes[playerId] = {
+            ...data,
+            nicknameInfo: nicknameInfo
+        };
+    });
+    
     const exportData = {
         version: '1.0',
         exportDate: new Date().toISOString(),
-        notes: allNotes,
+        notes: formattedNotes,
         settings: {
             colors: colors
         }

@@ -43,12 +43,19 @@ function renderNotes() {
     
     notesList.innerHTML = entries.map(([playerId, data]) => {
         const nickname = data.nickname || playerId; // Fallback to playerId if no nickname
+        const previousNickname = data.previousNickname;
         const preview = data.text.length > 40 ? data.text.substring(0, 40) + '...' : data.text;
+        
+        // Show both nicknames if changed
+        let nicknameDisplay = escapeHtml(nickname);
+        if (previousNickname && previousNickname !== nickname) {
+            nicknameDisplay = `${escapeHtml(nickname)} <span class="nickname-previous">(was: ${escapeHtml(previousNickname)})</span>`;
+        }
         
         return `
             <div class="note-item">
                 <div class="note-info">
-                    <div class="note-nickname">${escapeHtml(nickname)}</div>
+                    <div class="note-nickname">${nicknameDisplay}</div>
                     <div class="note-preview">${escapeHtml(preview)}</div>
                 </div>
                 <div class="note-actions">

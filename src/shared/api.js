@@ -103,8 +103,8 @@ function getCurrentMatchId() {
 
 /**
  * Load players from current match room
- * Uses match-stats endpoint which returns lobby nicknames
- * @returns {Promise<Array>} Array of player objects
+ * Combines match-stats (lobby nicknames) with match data (current nicknames)
+ * @returns {Promise<Array>} Array of player objects with {playerId, lobbyNickname, currentNickname}
  */
 async function loadPlayersFromCurrentMatch() {
     const matchId = getCurrentMatchId();
@@ -115,18 +115,55 @@ async function loadPlayersFromCurrentMatch() {
     }
     
     try {
-        // Use match-stats endpoint which returns nicknames as shown in lobby
-        const matchStats = await fetchMatchStats(matchId);
+        console.log(`[API] ========== LOADING MATCH DATA ==========`);
+        console.log(`[API] Match ID: ${matchId}`);
+        
+        // Load both: lobby nicknames and current nicknames
+        const [matchStats, matchData] = await Promise.all([
+            fetchMatchStats(matchId),
+            fetchMatchData(matchId)
+        ]);
         
         if (!matchStats || !matchStats.players) {
-            console.error('Invalid match stats received');
+            console.error('[API] Invalid match stats received');
             return [];
         }
         
-        console.log(`[API] Loaded ${matchStats.players.length} players from match-stats`);
-        console.log(`[API] Players:`, matchStats.players.map(p => `${p.nickname} (${p.playerId})`));
+        if (!matchData || !matchData.players) {
+            console.error('[API] Invalid match data received');
+            return [];
+        }
         
-        return matchStats.players;
+        console.log(`[API] Match-stats: ${matchStats.players.length} players (lobby nicknames)`);
+        console.log(`[API] Match data: ${matchData.players.length} players (current nicknames)`);
+        
+        // Create a map of playerId -> current nickname
+        const currentNicknamesMap = {};
+        matchData.players.forEach(player => {
+            currentNicknamesMap[player.playerId] = player.nickname;
+        });
+        
+        // Combine: use lobby nickname for mapping, current nickname for display
+        const players = matchStats.players.map(player => {
+            const currentNickname = currentNicknamesMap[player.playerId] || player.nickname;
+            
+            return {
+                playerId: player.playerId,
+                lobbyNickname: player.nickname,     // Nickname in this match lobby
+                currentNickname: currentNickname    // Current nickname (most recent)
+            };
+        });
+        
+        console.log(`[API] Combined ${players.length} players:`);
+        players.forEach(p => {
+            if (p.lobbyNickname !== p.currentNickname) {
+                console.log(`[API]   "${p.currentNickname}" (lobby: "${p.lobbyNickname}") [${p.playerId}]`);
+            } else {
+                console.log(`[API]   "${p.currentNickname}" [${p.playerId}]`);
+            }
+        });
+        
+        return players;
     } catch (error) {
         console.error('Failed to load players from match:', error);
         return [];

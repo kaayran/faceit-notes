@@ -277,6 +277,12 @@ async function loadMatchPlayers() {
             updatePlayerMappingsFromApi(players);
             
             console.log('Player mappings updated successfully');
+            
+            // Now add buttons (mapping is ready)
+            console.log('Adding buttons to match room...');
+            setTimeout(() => {
+                addNotesButtonsToMatchRoom();
+            }, 500);
         }
     } catch (error) {
         console.error('Failed to load match players:', error);

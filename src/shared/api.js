@@ -24,6 +24,28 @@ async function fetchMatchData(matchId) {
 }
 
 /**
+ * Fetch match stats with lobby nicknames
+ * This returns players with nicknames as they appear in the match lobby
+ * @param {string} matchId - FACEIT match ID
+ * @returns {Promise<Object>} Match stats with players array
+ */
+async function fetchMatchStats(matchId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/match-stats?matchId=${matchId}`);
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch match stats: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching match stats:', error);
+        throw error;
+    }
+}
+
+/**
  * Fetch player data
  * @param {string} playerId - FACEIT player ID
  * @returns {Promise<Object>} Player data
@@ -81,6 +103,7 @@ function getCurrentMatchId() {
 
 /**
  * Load players from current match room
+ * Uses match-stats endpoint which returns lobby nicknames
  * @returns {Promise<Array>} Array of player objects
  */
 async function loadPlayersFromCurrentMatch() {
@@ -92,15 +115,18 @@ async function loadPlayersFromCurrentMatch() {
     }
     
     try {
-        const matchData = await fetchMatchData(matchId);
+        // Use match-stats endpoint which returns nicknames as shown in lobby
+        const matchStats = await fetchMatchStats(matchId);
         
-        if (!matchData || !matchData.players) {
-            console.error('Invalid match data received');
+        if (!matchStats || !matchStats.players) {
+            console.error('Invalid match stats received');
             return [];
         }
         
-        console.log(`Loaded ${matchData.players.length} players from match ${matchId}`);
-        return matchData.players;
+        console.log(`[API] Loaded ${matchStats.players.length} players from match-stats`);
+        console.log(`[API] Players:`, matchStats.players.map(p => `${p.nickname} (${p.playerId})`));
+        
+        return matchStats.players;
     } catch (error) {
         console.error('Failed to load players from match:', error);
         return [];

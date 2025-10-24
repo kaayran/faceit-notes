@@ -31,7 +31,20 @@ function createNoteButton(nickname, playerId = null) {
     const container = document.createElement('div');
     container.className = 'faceit-notes-btn';
     
-    const hasNote = getPlayerNote(nickname);
+    // Try to get playerId if not provided
+    const actualPlayerId = playerId || getPlayerIdByNickname(nickname);
+    
+    console.log(`[Button] Creating button for "${nickname}", playerId: ${actualPlayerId || 'NOT FOUND'}`);
+    
+    // Check for note by playerId (preferred) or nickname (fallback)
+    let hasNote = false;
+    if (actualPlayerId) {
+        hasNote = hasNoteById(actualPlayerId);
+        console.log(`[Button] Checked by playerId (${actualPlayerId}): ${hasNote ? 'HAS NOTE ✓' : 'no note'}`);
+    } else {
+        hasNote = !!getPlayerNote(nickname);
+        console.log(`[Button] Checked by nickname (${nickname}): ${hasNote ? 'HAS NOTE ✓' : 'no note'}`);
+    }
     
     // Create SVG icon
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -66,8 +79,11 @@ function createNoteButton(nickname, playerId = null) {
     container.appendChild(svg);
     
     // Store playerId on the button element for later retrieval
-    if (playerId) {
-        container.setAttribute('data-player-id', playerId);
+    if (actualPlayerId) {
+        container.setAttribute('data-player-id', actualPlayerId);
+        console.log(`[Button] ✓ Stored playerId in data-attribute: ${actualPlayerId}`);
+    } else {
+        console.warn(`[Button] ⚠️ No playerId to store for ${nickname}`);
     }
     
     container.addEventListener('click', async (e) => {
@@ -148,9 +164,23 @@ function createTooltip(nickname, note) {
  * Update all note buttons
  */
 function updateNotesButtons() {
-    document.querySelectorAll('.faceit-notes-btn').forEach(button => {
+    console.log(`[Button] ========== UPDATING ALL BUTTONS ==========`);
+    const buttons = document.querySelectorAll('.faceit-notes-btn');
+    console.log(`[Button] Found ${buttons.length} buttons to update`);
+    
+    buttons.forEach(button => {
         const nickname = button.getAttribute('data-nickname');
-        const hasNote = getPlayerNote(nickname);
+        const playerId = button.getAttribute('data-player-id') || getPlayerIdByNickname(nickname);
+        
+        console.log(`[Button] Updating button for "${nickname}", playerId: ${playerId || 'NOT FOUND'}`);
+        
+        // Check for note by playerId (preferred) or nickname (fallback)
+        let hasNote = false;
+        if (playerId) {
+            hasNote = hasNoteById(playerId);
+        } else {
+            hasNote = !!getPlayerNote(nickname);
+        }
         
         const svg = button.querySelector('svg');
         if (!svg) return;

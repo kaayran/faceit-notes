@@ -8,6 +8,8 @@
 
 ### Core Functionality
 - **Player Notes Management** - Add, edit, and delete notes for any player directly on FACEIT pages
+- **Persistent Player Tracking** - Notes linked to FACEIT Player ID, survive nickname changes
+- **Nickname History** - Shows current and previous nicknames when players change names
 - **Smart Note Icons** - Visual indicators on player cards showing note status
 - **Search & Filter** - Quick search through all saved notes
 - **Import/Export** - Backup and restore notes in JSON format with timestamp-based smart merging
@@ -27,14 +29,16 @@
 - **Dark Mode UI** - Minimalist dark interface matching FACEIT style
 
 ### Technical Features
+- **Dual API Integration** - Combines match room data with current player profiles
+- **Smart Nickname Resolution** - Automatically fetches and displays most recent nicknames
 - **Timestamp-based Sync** - Automatic conflict resolution when importing notes
 - **Real-time Updates** - Changes reflect immediately across all tabs
 - **Local Storage** - All data stored locally in your browser
 - **Internationalization** - Ready for multiple languages (English included)
+- **Extensive Debug Logging** - Detailed console logs for troubleshooting
 
 ## Roadmap
 
 - [ ] Publish to Chrome Web Store
-- [ ] Link notes by FACEIT ID instead of nickname (handle nickname changes)
 - [ ] Add more languages (Russian, Spanish, German, French)
 - [ ] Cloud synchronization (optional feature)

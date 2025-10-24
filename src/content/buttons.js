@@ -34,16 +34,12 @@ function createNoteButton(nickname, playerId = null) {
     // Try to get playerId if not provided
     const actualPlayerId = playerId || getPlayerIdByNickname(nickname);
     
-    console.log(`[Button] Creating button for "${nickname}", playerId: ${actualPlayerId || 'NOT FOUND'}`);
-    
     // Check for note by playerId (preferred) or nickname (fallback)
     let hasNote = false;
     if (actualPlayerId) {
         hasNote = hasNoteById(actualPlayerId);
-        console.log(`[Button] Checked by playerId (${actualPlayerId}): ${hasNote ? 'HAS NOTE ✓' : 'no note'}`);
     } else {
         hasNote = !!getPlayerNote(nickname);
-        console.log(`[Button] Checked by nickname (${nickname}): ${hasNote ? 'HAS NOTE ✓' : 'no note'}`);
     }
     
     // Create SVG icon
@@ -81,9 +77,6 @@ function createNoteButton(nickname, playerId = null) {
     // Store playerId on the button element for later retrieval
     if (actualPlayerId) {
         container.setAttribute('data-player-id', actualPlayerId);
-        console.log(`[Button] ✓ Stored playerId in data-attribute: ${actualPlayerId}`);
-    } else {
-        console.warn(`[Button] ⚠️ No playerId to store for ${nickname}`);
     }
     
     container.addEventListener('click', async (e) => {
@@ -164,15 +157,11 @@ function createTooltip(nickname, note) {
  * Update all note buttons
  */
 function updateNotesButtons() {
-    console.log(`[Button] ========== UPDATING ALL BUTTONS ==========`);
     const buttons = document.querySelectorAll('.faceit-notes-btn');
-    console.log(`[Button] Found ${buttons.length} buttons to update`);
     
     buttons.forEach(button => {
         const nickname = button.getAttribute('data-nickname');
         const playerId = button.getAttribute('data-player-id') || getPlayerIdByNickname(nickname);
-        
-        console.log(`[Button] Updating button for "${nickname}", playerId: ${playerId || 'NOT FOUND'}`);
         
         // Check for note by playerId (preferred) or nickname (fallback)
         let hasNote = false;

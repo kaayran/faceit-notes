@@ -64,21 +64,16 @@ function getPlayerIdByNickname(nickname) {
 function getPlayerNote(nickname) {
     const playerId = playerMapping[nickname];
     
-    console.log(`[Storage] Getting note for "${nickname}", mapped playerId: ${playerId || 'null'}`);
-    
     // Try by playerId first
     if (playerId && cachedNotes[playerId]) {
-        console.log(`[Storage] ✓ Found note by playerId (${playerId})`);
         return cachedNotes[playerId].text;
     }
     
     // Fallback: check if note stored directly by nickname
     if (cachedNotes[nickname]) {
-        console.log(`[Storage] ✓ Found note by nickname (${nickname}) [fallback]`);
         return cachedNotes[nickname].text;
     }
     
-    console.log(`[Storage] ✗ No note found`);
     return '';
 }
 
@@ -87,7 +82,6 @@ function getPlayerNote(nickname) {
  */
 function getPlayerNoteById(playerId) {
     const data = cachedNotes[playerId];
-    console.log(`[Storage] getPlayerNoteById("${playerId}"): ${data ? 'FOUND' : 'NOT FOUND'}`);
     if (!data) return '';
     return data.text;
 }
@@ -123,32 +117,20 @@ function getCurrentNicknameByPlayerId(playerId) {
  * @param {string} currentNickname - Current nickname from API (optional, will be looked up if not provided)
  */
 async function savePlayerNote(lobbyNickname, noteText, playerId = null, currentNickname = null) {
-    console.log(`[Storage] ========== SAVING NOTE ==========`);
-    console.log(`[Storage] Lobby nickname: "${lobbyNickname}"`);
-    console.log(`[Storage] Current nickname provided: "${currentNickname || 'null'}"`);
-    console.log(`[Storage] PlayerId provided: ${playerId || 'null'}`);
-    console.log(`[Storage] PlayerId from mapping: ${playerMapping[lobbyNickname] || 'null'}`);
-    
     // If playerId not provided, try to get it from mapping
     const actualPlayerId = playerId || playerMapping[lobbyNickname];
     
     // If currentNickname not provided, try to look it up
     if (!currentNickname && actualPlayerId) {
         currentNickname = currentNicknamesMap[actualPlayerId];
-        console.log(`[Storage] Current nickname from map: "${currentNickname || 'null'}"`);
     }
     
-    console.log(`[Storage] Actual PlayerId used: ${actualPlayerId || 'FALLBACK TO NICKNAME'}`);
-    console.log(`[Storage] Note text: "${noteText.substring(0, 50)}${noteText.length > 50 ? '...' : ''}"`);
-    
     if (!actualPlayerId) {
-        console.error(`[Storage] ❌ ERROR: No playerId found for "${lobbyNickname}"!`);
-        console.error(`[Storage] Falling back to nickname as storage key.`);
+        console.error(`[Storage] No playerId found for "${lobbyNickname}", using nickname fallback`);
     }
     
     // Use playerId as storage key, or nickname as fallback
     const storageKey = actualPlayerId || lobbyNickname;
-    console.log(`[Storage] Storage key: "${storageKey}"`);
     
     if (noteText.trim()) {
         // Get existing note to check current nickname
@@ -162,9 +144,6 @@ async function savePlayerNote(lobbyNickname, noteText, playerId = null, currentN
         if (currentNickname && currentNickname !== lobbyNickname) {
             finalNickname = currentNickname;
             finalPreviousNickname = lobbyNickname;
-            console.log(`[Storage] ✓ Saving with current nickname "${currentNickname}", lobby nickname "${lobbyNickname}" as previous`);
-        } else {
-            console.log(`[Storage] ✓ Saving with nickname "${finalNickname}"`);
         }
         
         cachedNotes[storageKey] = {
@@ -180,22 +159,16 @@ async function savePlayerNote(lobbyNickname, noteText, playerId = null, currentN
             if (currentNickname && currentNickname !== lobbyNickname) {
                 playerMapping[currentNickname] = actualPlayerId;
             }
-            console.log(`[Storage] ✓ Note saved with playerId: ${actualPlayerId}`);
         } else {
             playerMapping[lobbyNickname] = lobbyNickname;
-            console.log(`[Storage] ⚠️ Note saved with nickname fallback`);
         }
-        
-        console.log(`[Storage] Current notes:`, Object.keys(cachedNotes));
     } else {
         // Delete note
         delete cachedNotes[storageKey];
         delete playerMapping[lobbyNickname];
-        console.log(`[Storage] ✓ Note deleted`);
     }
     
     await chrome.storage.local.set({ playerNotes: cachedNotes });
-    console.log(`[Storage] ========== SAVE COMPLETE ==========`);
 }
 
 /**
@@ -237,9 +210,7 @@ function hasNote(nickname) {
  * Check if player has note (by playerId)
  */
 function hasNoteById(playerId) {
-    const result = !!cachedNotes[playerId];
-    console.log(`[Storage] hasNoteById("${playerId}"): ${result}`);
-    return result;
+    return !!cachedNotes[playerId];
 }
 
 /**
@@ -247,20 +218,15 @@ function hasNoteById(playerId) {
  * @param {Array} players - Array of player objects from API with {playerId, lobbyNickname, currentNickname}
  */
 function updatePlayerMappingsFromApi(players) {
-    console.log('[Storage] ========== UPDATING MAPPINGS ==========');
-    console.log(`[Storage] Processing ${players.length} players from API`);
-    
     for (const player of players) {
         const { playerId, lobbyNickname, currentNickname } = player;
         
         if (!playerId || !lobbyNickname) {
-            console.warn(`[Storage] ⚠️ Skipping player with missing data:`, player);
             continue;
         }
         
         // Map LOBBY nickname to playerId (for finding players on page)
         playerMapping[lobbyNickname] = playerId;
-        console.log(`[Storage] ✓ Lobby: "${lobbyNickname}" -> "${playerId}"`);
         
         // Store current nickname by playerId
         if (currentNickname) {
@@ -269,7 +235,6 @@ function updatePlayerMappingsFromApi(players) {
             // Also map CURRENT nickname to playerId (in case it's used somewhere)
             if (currentNickname !== lobbyNickname) {
                 playerMapping[currentNickname] = playerId;
-                console.log(`[Storage]   └─ Current: "${currentNickname}" -> "${playerId}"`);
             }
         }
         
@@ -281,16 +246,8 @@ function updatePlayerMappingsFromApi(players) {
             if (currentNickname && savedNickname !== currentNickname) {
                 cachedNotes[playerId].previousNickname = savedNickname;
                 cachedNotes[playerId].nickname = currentNickname;
-                console.log(`[Storage]   └─ Note updated: "${savedNickname}" → "${currentNickname}"`);
             }
         }
     }
-    
-    console.log('[Storage] ========== FINAL MAPPINGS ==========');
-    Object.entries(playerMapping).forEach(([nick, id]) => {
-        console.log(`[Storage] "${nick}" -> "${id}"`);
-    });
-    console.log(`[Storage] Total: ${Object.keys(playerMapping).length} mappings`);
-    console.log('[Storage] Existing notes:', Object.keys(cachedNotes));
 }
 

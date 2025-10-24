@@ -110,13 +110,10 @@ async function loadPlayersFromCurrentMatch() {
     const matchId = getCurrentMatchId();
     
     if (!matchId) {
-        console.log('Not in a match room');
         return [];
     }
     
     try {
-        console.log(`[API] ========== LOADING MATCH DATA ==========`);
-        console.log(`[API] Match ID: ${matchId}`);
         
         // Load both: lobby nicknames and current nicknames
         const [matchStats, matchData] = await Promise.all([
@@ -124,18 +121,10 @@ async function loadPlayersFromCurrentMatch() {
             fetchMatchData(matchId)
         ]);
         
-        if (!matchStats || !matchStats.players) {
-            console.error('[API] Invalid match stats received');
+        if (!matchStats || !matchStats.players || !matchData || !matchData.players) {
+            console.error('[API] Failed to fetch match data');
             return [];
         }
-        
-        if (!matchData || !matchData.players) {
-            console.error('[API] Invalid match data received');
-            return [];
-        }
-        
-        console.log(`[API] Match-stats: ${matchStats.players.length} players (lobby nicknames)`);
-        console.log(`[API] Match data: ${matchData.players.length} players (current nicknames)`);
         
         // Create a map of playerId -> current nickname
         const currentNicknamesMap = {};
@@ -152,15 +141,6 @@ async function loadPlayersFromCurrentMatch() {
                 lobbyNickname: player.nickname,     // Nickname in this match lobby
                 currentNickname: currentNickname    // Current nickname (most recent)
             };
-        });
-        
-        console.log(`[API] Combined ${players.length} players:`);
-        players.forEach(p => {
-            if (p.lobbyNickname !== p.currentNickname) {
-                console.log(`[API]   "${p.currentNickname}" (lobby: "${p.lobbyNickname}") [${p.playerId}]`);
-            } else {
-                console.log(`[API]   "${p.currentNickname}" [${p.playerId}]`);
-            }
         });
         
         return players;

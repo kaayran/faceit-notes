@@ -17,25 +17,12 @@ async function openNoteModal(nickname, playerId = null) {
     let actualPlayerId = playerId || getPlayerIdByNickname(nickname);
     let actualNickname = nickname;
     
-    console.log(`[Modal] ========== OPENING MODAL ==========`);
-    console.log(`[Modal] Nickname: "${nickname}"`);
-    console.log(`[Modal] PlayerId passed: ${playerId || 'null'}`);
-    console.log(`[Modal] PlayerId from mapping: ${getPlayerIdByNickname(nickname) || 'null'}`);
-    console.log(`[Modal] Final playerId: ${actualPlayerId || 'NOT FOUND'}`);
-    
-    // Show warning if no playerId
-    if (!actualPlayerId) {
-        console.warn(`[Modal] ⚠️ WARNING: No playerId found for ${nickname}`);
-    }
-    
     // Get current note by playerId if available, otherwise by nickname
     let currentNote = '';
     if (actualPlayerId) {
         currentNote = getPlayerNoteById(actualPlayerId);
-        console.log(`[Modal] Loading note by playerId (${actualPlayerId})`);
     } else {
         currentNote = getPlayerNote(actualNickname);
-        console.log(`[Modal] Loading note by nickname (${actualNickname}) [fallback]`);
     }
     
     const placeholder = chrome.i18n.getMessage('addNotePlaceholder') || 'Add note...';
@@ -91,11 +78,6 @@ async function openNoteModal(nickname, playerId = null) {
     
     saveBtn.addEventListener('click', async () => {
         const note = textarea.value;
-        
-        console.log(`[Modal] ========== SAVE BUTTON CLICKED ==========`);
-        console.log(`[Modal] Nickname: "${actualNickname}"`);
-        console.log(`[Modal] PlayerId: ${actualPlayerId || 'null'}`);
-        console.log(`[Modal] Note length: ${note.length} chars`);
         
         // Pass playerId if available, otherwise will fallback to nickname
         await savePlayerNote(actualNickname, note, actualPlayerId);

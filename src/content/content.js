@@ -267,19 +267,13 @@ async function loadMatchPlayers() {
     }
     
     try {
-        console.log(`Loading players for match ${matchId}...`);
         const players = await loadPlayersFromCurrentMatch();
         
         if (players && players.length > 0) {
-            console.log(`Loaded ${players.length} players, updating mappings...`);
-            
             // Update player mappings from API data
             updatePlayerMappingsFromApi(players);
             
-            console.log('Player mappings updated successfully');
-            
             // Now add buttons (mapping is ready)
-            console.log('Adding buttons to match room...');
             setTimeout(() => {
                 addNotesButtonsToMatchRoom();
             }, 500);
@@ -304,7 +298,6 @@ function setupUrlChangeDetection() {
             
             // If navigated to a match room, load players
             if (currentUrl.includes('/room/')) {
-                console.log('Navigated to match room, loading players...');
                 loadMatchPlayers();
             }
         }
@@ -318,7 +311,6 @@ function setupUrlChangeDetection() {
     // Also listen to popstate for back/forward navigation
     window.addEventListener('popstate', () => {
         if (window.location.href.includes('/room/')) {
-            console.log('Navigated to match room via history, loading players...');
             loadMatchPlayers();
         }
     });

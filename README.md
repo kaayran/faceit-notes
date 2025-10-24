@@ -34,12 +34,13 @@
 - **Timestamp-based Sync** - Automatic conflict resolution when importing notes
 - **Real-time Updates** - Changes reflect immediately across all tabs
 - **Local Storage** - All data stored locally in your browser
-- **Internationalization** - Ready for multiple languages (English included)
+- **Internationalization** - Multi-language support (English, Russian)
 - **Extensive Debug Logging** - Detailed console logs for troubleshooting
 
 ## Roadmap
 
 - [x] **Link notes by FACEIT Player ID** - Notes persist across nickname changes
+- [x] **Russian localization** - Full Russian language support
 - [ ] Publish to Chrome Web Store
-- [ ] Add more languages (Russian, Spanish, German, French)
+- [ ] Add more languages (Spanish, German, French, Portuguese)
 - [ ] Cloud synchronization (optional feature)

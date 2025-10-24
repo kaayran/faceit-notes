@@ -1,0 +1,151 @@
+{
+  "extensionName": {
+    "message": "Faceit Notes",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Расширение для создания заметок об игроках на Faceit.",
+    "description": "Description of the extension"
+  },
+  "popupTitle": {
+    "message": "Faceit Notes",
+    "description": "Title in the popup"
+  },
+  "viewNotesButton": {
+    "message": "Заметки",
+    "description": "Button to view notes"
+  },
+  "settingsButton": {
+    "message": "Настройки",
+    "description": "Button to open settings"
+  },
+  "extensionStatus": {
+    "message": "Статус расширения",
+    "description": "Label for extension status toggle"
+  },
+  "statusEnabled": {
+    "message": "Включено",
+    "description": "Status text when extension is enabled"
+  },
+  "statusDisabled": {
+    "message": "Отключено",
+    "description": "Status text when extension is disabled"
+  },
+  "notesTitle": {
+    "message": "Заметки",
+    "description": "Title for notes screen"
+  },
+  "searchPlaceholder": {
+    "message": "Поиск...",
+    "description": "Placeholder for search input"
+  },
+  "noNotesYet": {
+    "message": "Заметок пока нет",
+    "description": "Empty state message"
+  },
+  "settingsTitle": {
+    "message": "Настройки",
+    "description": "Title for settings screen"
+  },
+  "colorSettings": {
+    "message": "Настройки цвета",
+    "description": "Color settings section header"
+  },
+  "iconWithoutNote": {
+    "message": "Иконка без заметки",
+    "description": "Label for icon color without note"
+  },
+  "iconWithNote": {
+    "message": "Иконка с заметкой",
+    "description": "Label for icon color with note"
+  },
+  "presets": {
+    "message": "Шаблоны",
+    "description": "Label for color presets section"
+  },
+  "presetDefault": {
+    "message": "По умолчанию",
+    "description": "Default color preset"
+  },
+  "presetProtanopia": {
+    "message": "Протанопия",
+    "description": "Protanopia color preset"
+  },
+  "presetDeuteranopia": {
+    "message": "Дейтеранопия",
+    "description": "Deuteranopia color preset"
+  },
+  "presetTritanopia": {
+    "message": "Тританопия",
+    "description": "Tritanopia color preset"
+  },
+  "resetButton": {
+    "message": "Сбросить",
+    "description": "Reset button"
+  },
+  "saveButton": {
+    "message": "Сохранить",
+    "description": "Save button"
+  },
+  "importExport": {
+    "message": "Импорт / Экспорт",
+    "description": "Import/Export section header"
+  },
+  "backupDescription": {
+    "message": "Резервное копирование и восстановление заметок",
+    "description": "Description for import/export section"
+  },
+  "exportNotesButton": {
+    "message": "📤 Экспортировать заметки",
+    "description": "Export notes button"
+  },
+  "importNotesButton": {
+    "message": "📥 Импортировать заметки",
+    "description": "Import notes button"
+  },
+  "totalNotes": {
+    "message": "Всего заметок:",
+    "description": "Label for total notes count"
+  },
+  "addNotePlaceholder": {
+    "message": "Добавить заметку...",
+    "description": "Placeholder for note textarea"
+  },
+  "deleteButton": {
+    "message": "Удалить",
+    "description": "Delete button"
+  },
+  "deleteConfirm": {
+    "message": "Точно?",
+    "description": "Delete confirmation text"
+  },
+  "savedFeedback": {
+    "message": "Сохранено!",
+    "description": "Feedback when settings are saved"
+  },
+  "exportedFeedback": {
+    "message": "✓ Экспортировано!",
+    "description": "Feedback when notes are exported"
+  },
+  "importedFeedback": {
+    "message": "✓ +$1",
+    "description": "Feedback when notes are imported (with count)"
+  },
+  "importedSkipped": {
+    "message": "(-$1 старых)",
+    "description": "Text for skipped old notes during import"
+  },
+  "invalidFileFormat": {
+    "message": "Неверный формат файла",
+    "description": "Error message for invalid import file"
+  },
+  "importError": {
+    "message": "Ошибка импорта файла:",
+    "description": "Error message prefix for import errors"
+  },
+  "clickToAddNote": {
+    "message": "Нажмите, чтобы добавить заметку",
+    "description": "Tooltip text when hovering over icon without note"
+  }
+}
+

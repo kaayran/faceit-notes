@@ -3,6 +3,7 @@
   <h1>FACEIT Notes</h1>
   <p>Browser extension for managing player notes on <a href="https://www.faceit.com">FACEIT</a></p>
   <p>
+    <a href="https://chromewebstore.google.com/detail/eomnfdhdkghkggogpkkjakhmopblibpg">🎯 Chrome Web Store</a> •
     <a href="https://kaayran.github.io/faceit-notes-website/">🌐 Website</a> •
     <a href="https://kaayran.github.io/faceit-notes-website/privacy.html">📋 Privacy Policy</a> •
     <a href="https://github.com/kaayran/faceit-notes/issues">🐛 Report Issue</a>
@@ -44,8 +45,9 @@
 
 ## Roadmap
 
-- [x] **Link notes by FACEIT Player ID** - Notes persist across nickname changes
-- [x] **Russian localization** - Full Russian language support
-- [ ] Publish to Chrome Web Store
+- [ ] Publish to Microsoft Edge Add-ons
+- [ ] Publish to Firefox Add-ons (AMO)
+- [ ] Publish to Yandex Extensions
+- [ ] Quick labels/tags with player context
 - [ ] Add more languages (Spanish, German, French, Portuguese)
 - [ ] Cloud synchronization (optional feature)

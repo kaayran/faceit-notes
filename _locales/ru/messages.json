@@ -96,11 +96,11 @@
     "description": "Description for import/export section"
   },
   "exportNotesButton": {
-    "message": "📤 Экспортировать заметки",
+    "message": "Экспортировать заметки",
     "description": "Export notes button"
   },
   "importNotesButton": {
-    "message": "📥 Импортировать заметки",
+    "message": "Импортировать заметки",
     "description": "Import notes button"
   },
   "totalNotes": {
@@ -124,11 +124,11 @@
     "description": "Feedback when settings are saved"
   },
   "exportedFeedback": {
-    "message": "✓ Экспортировано!",
+    "message": "Экспортировано!",
     "description": "Feedback when notes are exported"
   },
   "importedFeedback": {
-    "message": "✓ +$1",
+    "message": "+$1",
     "description": "Feedback when notes are imported (with count)"
   },
   "importedSkipped": {

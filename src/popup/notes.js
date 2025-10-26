@@ -59,8 +59,8 @@ function renderNotes() {
                     <div class="note-preview">${escapeHtml(preview)}</div>
                 </div>
                 <div class="note-actions">
-                    <button class="note-btn edit" data-player-id="${escapeHtml(playerId)}" data-nickname="${escapeHtml(nickname)}" title="Edit">✎</button>
-                    <button class="note-btn delete" data-player-id="${escapeHtml(playerId)}" data-nickname="${escapeHtml(nickname)}" title="Delete">✕</button>
+                    <button class="note-btn edit" data-player-id="${escapeHtml(playerId)}" data-nickname="${escapeHtml(nickname)}" title="Edit">Edit</button>
+                    <button class="note-btn delete" data-player-id="${escapeHtml(playerId)}" data-nickname="${escapeHtml(nickname)}" title="Delete">&times;</button>
                 </div>
             </div>
         `;
@@ -117,14 +117,14 @@ async function deleteNoteDirectly(playerId, nickname, btn) {
     
     if (!deleteStates.has(key)) {
         deleteStates.set(key, true);
-        btn.textContent = '✓';
+        btn.textContent = '?';
         btn.style.color = '#dc3545';
         btn.style.borderColor = '#dc3545';
         
         setTimeout(() => {
             if (deleteStates.has(key)) {
                 deleteStates.delete(key);
-                btn.textContent = '✕';
+                btn.textContent = '×';
                 btn.style.color = '';
                 btn.style.borderColor = '';
             }

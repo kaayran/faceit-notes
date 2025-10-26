@@ -154,7 +154,7 @@ async function exportNotesToJSON() {
     // Visual feedback
     const exportBtn = document.getElementById('exportNotes');
     const originalText = exportBtn.textContent;
-    exportBtn.textContent = chrome.i18n.getMessage('exportedFeedback') || '✓ Exported!';
+    exportBtn.textContent = chrome.i18n.getMessage('exportedFeedback') || 'Exported!';
     setTimeout(() => {
         exportBtn.textContent = originalText;
     }, 2000);

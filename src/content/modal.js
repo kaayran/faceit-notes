@@ -33,7 +33,7 @@ async function openNoteModal(nickname, playerId = null) {
         <div class="faceit-notes-modal-content">
             <div class="faceit-notes-modal-header">
                 <span class="faceit-notes-nickname">${escapeHtml(actualNickname)}</span>
-                <button class="faceit-notes-close">✕</button>
+                <button class="faceit-notes-close">&times;</button>
             </div>
             <textarea 
                 id="faceit-notes-textarea" 
